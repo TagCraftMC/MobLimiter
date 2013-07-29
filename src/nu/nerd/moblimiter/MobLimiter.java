@@ -11,7 +11,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_5_R3.CraftChunk;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
@@ -193,56 +192,28 @@ public class MobLimiter extends JavaPlugin implements Listener {
 		}
 	}
 
-	public void removeMobs(Chunk c) {
-		net.minecraft.server.v1_5_R3.Chunk chunk = ((CraftChunk) c).getHandle();
+	public void removeMobs(Chunk chunk) {
 		Map<String, Integer> count = new HashMap<String, Integer>();
-		for (int i = 0; i < 16; i++) {
-			for (int j = 0; j < chunk.entitySlices[i].size(); j++) {
-				Object obj = chunk.entitySlices[i].get(j);
-				Entity entity = null;
-				if (obj instanceof net.minecraft.server.v1_5_R3.Entity) {
-					entity = ((net.minecraft.server.v1_5_R3.Entity) obj).getBukkitEntity();
-				} else {
-					entity = (Entity) obj;
+		for (Entity entity : chunk.getEntities()) {
+			if (!entity.isDead() && (entity instanceof Animals || entity instanceof Monster)) {
+				String mobName = entity.getType().name().toLowerCase();
+				if (entity instanceof Sheep) {
+					mobName += ((Sheep) entity).getColor().name().toLowerCase();
 				}
-				if (entity != null) {
-					if (entity instanceof Creature) {
-						String mobname = entity.getType().name().toLowerCase();
-
-						if (count.get(mobname) == null) {
-							count.put(mobname, 0);
-						}
-
-						int mbcount = count.get(mobname);
-						count.put(mobname, ++mbcount);
-						if (limits.get(mobname) != null) {
-							if (mbcount > limits.get(mobname)) {
-								((LivingEntity) entity).remove();
-							}
-						}
-
-						if (!entity.isDead() && entity instanceof Sheep)
-						{
-							mobname += ((Sheep) entity).getColor().name().toLowerCase();
-
-							if (count.get(mobname) == null) {
-								count.put(mobname, 0);
-							}
-
-							mbcount = count.get(mobname);
-							count.put(mobname, ++mbcount);
-							if (limits.get(mobname) != null) {
-								if (mbcount > limits.get(mobname)) {
-									((LivingEntity) entity).remove();
-								}
-							}
-						}
+				if (count.get(mobName) == null) {
+					count.put(mobName, 0);
+				}
+				int mobCount = count.get(mobName);
+				count.put(mobName, ++mobCount);
+				if (limits.get(mobName) != null) {
+					if (mobCount > limits.get(mobName)) {
+						((LivingEntity) entity).remove();
 					}
 				}
 			}
 		}
 	}
-
+  	
 	public boolean isBreedingFood(EntityType type, Material food)
 	{
 		switch (type)
