@@ -12,10 +12,10 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Animals;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Tameable;
@@ -166,7 +166,7 @@ public class MobLimiter extends JavaPlugin implements Listener {
 				Message(message, player);
 				lastSpamMessage.put(player.getName(), System.currentTimeMillis());
 			}
-			
+
 			e.setCancelled(true);
 			Bukkit.getScheduler().runTaskLater(this, new Runnable() {
 
@@ -174,7 +174,7 @@ public class MobLimiter extends JavaPlugin implements Listener {
 				public void run() {
 					player.updateInventory();
 				}
-				
+
 			}, 2);
 			return;
 
@@ -197,9 +197,7 @@ public class MobLimiter extends JavaPlugin implements Listener {
 		for (Entity entity : chunk.getEntities()) {
 			if (!entity.isDead() && (entity instanceof Animals || entity instanceof Monster)) {
 				String mobName = entity.getType().name().toLowerCase();
-				if (entity instanceof Sheep) {
-					mobName += ((Sheep) entity).getColor().name().toLowerCase();
-				}
+
 				if (count.get(mobName) == null) {
 					count.put(mobName, 0);
 				}
@@ -210,10 +208,28 @@ public class MobLimiter extends JavaPlugin implements Listener {
 						((LivingEntity) entity).remove();
 					}
 				}
+
+				if (!entity.isDead() && entity instanceof Sheep)
+				{
+					mobName += ((Sheep) entity).getColor().name().toLowerCase();
+
+					if (count.get(mobName) == null) {
+						count.put(mobName, 0);
+					}
+
+					mobCount = count.get(mobName);
+					count.put(mobName, ++mobCount);
+					if (limits.get(mobName) != null) {
+						if (mobCount > limits.get(mobName)) {
+							((LivingEntity) entity).remove();
+						}
+					} 
+				}
+
 			}
 		}
 	}
-  	
+
 	public boolean isBreedingFood(EntityType type, Material food)
 	{
 		switch (type)
@@ -266,7 +282,7 @@ public class MobLimiter extends JavaPlugin implements Listener {
 
 		for (int i = 0; i < lines.length; i++) {
 			lines[i] = lines[i].trim();
-			
+
 			if (i == 0)
 				continue;
 
@@ -277,13 +293,13 @@ public class MobLimiter extends JavaPlugin implements Listener {
 			char lastColor = lines[i - 1].charAt(lastColorChar + 1);
 			lines[i] = Character.toString(ChatColor.COLOR_CHAR).concat(Character.toString(lastColor)).concat(lines[i]);	
 		}		
-		
+
 		for (int i = 0; i < lines.length; i++)
 			sender.sendMessage(lines[i]);
 
 
 	}
-	
+
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 		if (sender.hasPermission("moblimiter.command.animals") && sender instanceof Player)
 		{
@@ -293,7 +309,7 @@ public class MobLimiter extends JavaPlugin implements Listener {
 		{
 			Message("&cYou are not allowed to use this command!", sender);
 		}
-		
+
 		return true;
 	}
 }
