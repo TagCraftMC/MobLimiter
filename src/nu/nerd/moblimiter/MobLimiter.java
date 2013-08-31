@@ -46,7 +46,8 @@ public class MobLimiter extends JavaPlugin implements Listener {
 	public Map<String, Long> lastSpamMessage = new HashMap<String, Long>();
 	public String breedLimitOneAnimalMessage;
 	public String breedLimitAllAnimalsMessage;
-
+	public String noHorseBreedingMessage;
+	
 	@Override
 	public void onEnable() {
 		this.getConfig().options().copyDefaults(true);
@@ -69,7 +70,7 @@ public class MobLimiter extends JavaPlugin implements Listener {
 
 		breedLimitOneAnimalMessage = this.getConfig().getString("Messages.BreedLimitOneAnimal", "Admin of this server is so lazy he forgot to set config!");
 		breedLimitAllAnimalsMessage = this.getConfig().getString("Messages.BreedLimitAllAnimals", "Admin of this server is so lazy he forgot to set config!");
-
+		noHorseBreedingMessage = this.getConfig().getString("Messages.NoHorseBreeding", "Sorry, you are not allowed to breed horses. Find another one in the wild.");
 
 		this.saveConfig();
 
@@ -132,13 +133,29 @@ public class MobLimiter extends JavaPlugin implements Listener {
 	public void onPlayerInteractEntity(final PlayerInteractEntityEvent e)
 	{
 		Entity ent = e.getRightClicked();
-		if (ent == null || !isFarmAnimal(ent))
+		
+		if (ent == null)
 			return;
-
+		
 		final Player player = e.getPlayer();
 		ItemStack hand = player.getItemInHand();
 
-		if (hand == null || !isBreedingFood(ent.getType(), hand.getType()))
+		if (hand == null)
+			return;
+		
+		if (ent.getType() == EntityType.HORSE && (hand.getType() == Material.GOLDEN_APPLE || hand.getType() == Material.GOLDEN_CARROT))
+		{
+			Message(noHorseBreedingMessage, player);
+			e.setCancelled(true);
+			
+			player.updateInventory();
+			return;
+		}
+		
+		if (!isFarmAnimal(ent))
+			return;
+		
+		if (!isBreedingFood(ent.getType(), hand.getType()))
 			return;
 
 		int breedPossibility = canBreed(ent.getLocation(), ent.getType());
