@@ -102,6 +102,13 @@ public class MobLimiter extends JavaPlugin implements Listener {
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onCreatureSpawnEvent(final CreatureSpawnEvent e) {
+		
+		if (e.getEntityType() == EntityType.HORSE && e.getSpawnReason() == SpawnReason.BREEDING)
+		{
+			e.setCancelled(true);
+			return;
+		}
+		
 		if (isFarmAnimal(e.getEntity()))
 		{
 			if (canBreed(e.getLocation(), e.getEntityType()) != 0)
