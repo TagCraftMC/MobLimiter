@@ -30,7 +30,7 @@ public class MobLimiterListener implements Listener {
 	public void onCreatureSpawn(CreatureSpawnEvent event)
 	{
 		//Prevent horse breeding
-		if (event.getEntityType() == EntityType.HORSE && event.getSpawnReason() == SpawnReason.BREEDING)
+		if (Settings.getBoolean(Setting.NO_HORSE_BREED) && event.getEntityType() == EntityType.HORSE && event.getSpawnReason() == SpawnReason.BREEDING)
 		{
 			event.setCancelled(true);
 			return;
@@ -71,7 +71,7 @@ public class MobLimiterListener implements Listener {
 			return;
 
 		//No horse breed
-		if (ent.getType() == EntityType.HORSE)
+		if (Settings.getBoolean(Setting.NO_HORSE_BREED) && ent.getType() == EntityType.HORSE)
 		{
 			Util.Message(Settings.getString(Setting.MESSAGE_NO_HORSE_BREEDING),  player);
 			event.setCancelled(true);

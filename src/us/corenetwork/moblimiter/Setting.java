@@ -4,6 +4,7 @@ package us.corenetwork.moblimiter;
 public enum Setting {	
 	
 	VIEW_DISTANCE_CHUNKS("ViewDistanceChunks", 10),
+	NO_HORSE_BREED("NoHorseBreed", true),
 	
 	MESSAGE_NO_PERMISSION("Messages.NoPermission", "No permission!"),
 	MESSAGE_MOB_COUNT_LINE("Messages.MobCountLine", "<MobName>: <ChunkCount>&f/<ChunkLimit> in Chunk, <ViewDistanceCount>&f/<ViewDistanceLimit> in View distance"),
