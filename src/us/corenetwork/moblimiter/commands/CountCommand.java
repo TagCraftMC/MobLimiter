@@ -60,12 +60,7 @@ public abstract class CountCommand extends BaseCommand {
 				int curCount = perCreatureCountsChunk.get(creatureSettings);
 				
 				allCountChunk++;
-				perCreatureCountsChunk.put(creatureSettings, curCount + 1);
-				
-				if (!tooMany)
-				{
-					tooMany = curCount > creatureSettings.getChunkLimit() || allCountChunk > groupSettings.globalChunkLimit;
-				}
+				perCreatureCountsChunk.put(creatureSettings, curCount + 1);				
 			}
 		}
 		

@@ -1,11 +1,7 @@
 package us.corenetwork.moblimiter;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class Util {
 	public static void Message(String message, CommandSender sender)
