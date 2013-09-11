@@ -103,58 +103,34 @@ public class CreatureUtil {
 	}
 
 	
-	public static LimitStatus getLimitStatus(EntityType type, Chunk chunk)
+	public static LimitStatus getViewDistanceLimitStatus(EntityType type, Chunk chunk)
 	{
 		CreatureGroupSettings groupSettings = CreatureSettingsStorage.typeGroups.get(type);
 		if (groupSettings == null)
 			return LimitStatus.OK;
 		
 		CreatureSettings creatureSettings = groupSettings.creatureSettings.get(type);
-		
-		int oneCountChunk = 0;
-		int allCountChunk = 0;
-		
+				
 		int oneCountViewDistance = 0;
 		int allCountViewDistance = 0;
-		
-		Entity[] chunkEntities = chunk.getEntities();
-		
-		for (Entity e : chunkEntities)
-		{
-			if (e instanceof Creature)
-			{				
-				if (e.getType() == type)
-				{
-					oneCountChunk++;
-					if (oneCountChunk >= creatureSettings.getChunkLimit())
-						return LimitStatus.TOO_MANY_ONE_CHUNK;
-
-				}
-				else
-				{
-					allCountChunk++;
-					if (allCountChunk >= groupSettings.globalChunkLimit)
-						return LimitStatus.TOO_MANY_ALL_CHUNK;
-				}
-			}
-		}
-		
+				
 		Iterable<Creature> viewDistanceCreatures = getCreaturesInRange(chunk);
 		for (Creature c : viewDistanceCreatures)
 		{
-			if (c.getType() == type)
-			{
-				oneCountViewDistance++;
-				if (oneCountViewDistance >= creatureSettings.getViewDistanceLimit())
-					return LimitStatus.TOO_MANY_ONE_VD;
-
-			}
-			else
+			if (CreatureSettingsStorage.typeGroups.get(c.getType()) == groupSettings)
 			{
 				allCountViewDistance++;
 				if (allCountViewDistance >= groupSettings.globalViewDistanceLimit)
-					return LimitStatus.TOO_MANY_ALL_VD;
-			}
+					return LimitStatus.TOO_MANY_ALL;
+
+				if (c.getType() == type)
+				{
+					oneCountViewDistance++;
+					if (oneCountViewDistance >= creatureSettings.getViewDistanceLimit())
+						return LimitStatus.TOO_MANY_ONE;
+
+				}
+			}			
 		}
 		
 		return LimitStatus.OK;
@@ -163,10 +139,7 @@ public class CreatureUtil {
 	public static enum LimitStatus
 	{
 		OK,
-		TOO_MANY_ONE_CHUNK,
-		TOO_MANY_ALL_CHUNK,
-		TOO_MANY_ONE_VD,
-		TOO_MANY_ALL_VD,
-
+		TOO_MANY_ONE,
+		TOO_MANY_ALL,
 	}
 }

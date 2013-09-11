@@ -34,7 +34,7 @@ public class MobLimiterListener implements Listener {
 			return;
 		}
 		
-		if (CreatureUtil.getLimitStatus(event.getEntityType(), event.getLocation().getChunk()) != LimitStatus.OK)
+		if (CreatureUtil.getViewDistanceLimitStatus(event.getEntityType(), event.getLocation().getChunk()) != LimitStatus.OK)
 		{
 			event.setCancelled(true);
 			return;
@@ -44,7 +44,7 @@ public class MobLimiterListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onEntityPortal(EntityPortalEvent event)
 	{
-		if (CreatureUtil.getLimitStatus(event.getEntityType(), event.getTo().getChunk()) != LimitStatus.OK)
+		if (CreatureUtil.getViewDistanceLimitStatus(event.getEntityType(), event.getTo().getChunk()) != LimitStatus.OK)
 		{
 			event.setCancelled(true);
 			return;
@@ -77,11 +77,8 @@ public class MobLimiterListener implements Listener {
 			return;
 		}
 		
-		//"You cannot breed this <MobName> because there is more than <MobTypeLimit> <MobNamePlural> in <Radius> block radius around you."),
-		//"You cannot breed this <MobName> because there are more than <MobGroupLimit> <MobGroupNamePlural> in <Radius> block radius around you."),
-
 		
-		LimitStatus status = CreatureUtil.getLimitStatus(ent.getType(), ent.getLocation().getChunk());
+		LimitStatus status = CreatureUtil.getViewDistanceLimitStatus(ent.getType(), ent.getLocation().getChunk());
 		if (status == LimitStatus.OK)
 			return;
 		
@@ -90,21 +87,19 @@ public class MobLimiterListener implements Listener {
 		
 		String message;
 		
-		if (status == LimitStatus.TOO_MANY_ONE_CHUNK || status == LimitStatus.TOO_MANY_ONE_VD)
+		if (status == LimitStatus.TOO_MANY_ONE)
 		{
 			message = Settings.getString(Setting.MESSAGE_BREED_LIMIT_ONE_MOB);
 			
 			message = message.replace("<MobNamePlural>", creatureSettings.getPluralName());
-			message = message.replace("<MobTypeLimit>", Integer.toString(status == LimitStatus.TOO_MANY_ONE_CHUNK ? creatureSettings.getChunkLimit() : creatureSettings.getViewDistanceLimit()));
-			message = message.replace("<Radius>", Integer.toString(status == LimitStatus.TOO_MANY_ONE_CHUNK ? 16 : Settings.getInt(Setting.VIEW_DISTANCE_CHUNKS) * 16));
+			message = message.replace("<MobTypeLimit>", Integer.toString(creatureSettings.getViewDistanceLimit()));
 		}
 		else
 		{
 			message = Settings.getString(Setting.MESSAGE_BREED_LIMIT_ALL_MOBS);
 			
 			message = message.replace("<MobGroupNamePlural>", groupSettings.groupPlural);
-			message = message.replace("<MobGroupLimit>", Integer.toString(status == LimitStatus.TOO_MANY_ALL_CHUNK ? groupSettings.globalChunkLimit : groupSettings.globalViewDistanceLimit));
-			message = message.replace("<Radius>", Integer.toString(status == LimitStatus.TOO_MANY_ALL_CHUNK ? 16 : Settings.getInt(Setting.VIEW_DISTANCE_CHUNKS) * 16));
+			message = message.replace("<MobGroupLimit>", Integer.toString(groupSettings.globalViewDistanceLimit));
 		}
 		
 		message = message.replace("<MobName>", creatureSettings.getSingularName());
