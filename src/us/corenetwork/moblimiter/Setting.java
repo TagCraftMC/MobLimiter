@@ -5,6 +5,7 @@ public enum Setting {
 	
 	VIEW_DISTANCE_CHUNKS("ViewDistanceChunks", 10),
 	NO_HORSE_BREED("NoHorseBreed", true),
+	BREEDING_SPAM_DELAY_SECONDS("BreedingSpamDelaySeconds", 5),
 	
 	MESSAGE_NO_PERMISSION("Messages.NoPermission", "No permission!"),
 	MESSAGE_MOB_COUNT_LINE("Messages.MobCountLine", "<MobName>: <ChunkCount>&f/<ChunkLimit> in Chunk, <ViewDistanceCount>&f/<ViewDistanceLimit> in View distance"),
