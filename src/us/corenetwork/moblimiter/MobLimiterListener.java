@@ -88,7 +88,7 @@ public class MobLimiterListener implements Listener {
 		CreatureGroupSettings groupSettings = CreatureSettingsStorage.typeGroups.get(ent.getType());		
 		CreatureSettings creatureSettings = groupSettings.creatureSettings.get(ent.getType());
 		
-		Long lastDisplayedSpam = lastDisplayedBreedingSpam.get(event.getPlayer().getName());
+		Long lastDisplayedSpam = lastDisplayedBreedingSpam.get(player.getName());
 		if (lastDisplayedSpam == null)
 			lastDisplayedSpam = 0L;
 		
@@ -113,6 +113,8 @@ public class MobLimiterListener implements Listener {
 			
 			message = message.replace("<MobName>", creatureSettings.getSingularName());
 			Util.Message(message, player);
+			
+			lastDisplayedBreedingSpam.put(player.getName(), System.currentTimeMillis());
 		}
 		
 		event.setCancelled(true);
