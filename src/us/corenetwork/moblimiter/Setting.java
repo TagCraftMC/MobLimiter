@@ -31,7 +31,9 @@ public enum Setting {
 	BLOCK_BELOW_100_DATA("Blocks.Below100.Data", (int) DyeColor.ORANGE.getWoolData()),
 
 	BLOCK_EXCEEDS_LIMIT_ID("Blocks.ExceedsLimit.Id", Material.WOOL.getId()),
-	BLOCK_EXCEEDS_LIMIT_DATA("Blocks.ExceedsLimit.Data", (int) DyeColor.RED.getWoolData()),;
+	BLOCK_EXCEEDS_LIMIT_DATA("Blocks.ExceedsLimit.Data", (int) DyeColor.RED.getWoolData()),
+
+	GRID_DURATION("Grid.Duration", 30*20);
 
 	private String name;
 	private Object def;

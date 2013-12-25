@@ -122,7 +122,18 @@ public abstract class CountCommand extends BaseCommand {
 					for (int bz = 0; bz < 16; bz++) {
 						Block block = chunk.getBlock(bx, drawY, bz);
 
-						if (bx == 0 || bx == 15 || bz == 0 || bz == 15) {
+						boolean send = false;
+						if (full <= 0) {
+							if (bx == 0 && bz == 0) {
+								send = true;
+							}
+						} else {
+							if (bx == 0 || bx == 15 || bz == 0 || bz == 15) {
+								send = true;
+							}
+						}
+
+						if (send) {
 							player.sendBlockChange(block.getLocation(), id, (byte) color);
 						}
 					}
@@ -132,7 +143,7 @@ public abstract class CountCommand extends BaseCommand {
 
 		cleanup = new Cleanup(cx, cz, drawY, player.getWorld(), player);
 		cleanup.setTaskId(
-				Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, cleanup, 10 * 20));
+				Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, cleanup, Settings.getInt(Setting.GRID_DURATION)));
 		cleanups.put(player, cleanup);
 	}
 
