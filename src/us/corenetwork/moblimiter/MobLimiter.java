@@ -17,6 +17,8 @@ public class MobLimiter extends JavaPlugin implements Listener {
 	public static MobLimiter instance;
 	
 	public HashMap<String, BaseCommand> commands = new HashMap<String, BaseCommand>();
+
+    public final WorkerPool pool = new WorkerPool();
 		
 	@Override
 	public void onEnable() {
@@ -28,8 +30,10 @@ public class MobLimiter extends JavaPlugin implements Listener {
 		
 		this.getServer().getPluginManager().registerEvents(new MobLimiterListener(), this);
 		
-		commands.put("animals", new AnimalsCommand());
-		commands.put("villagers", new VillagersCommand());
+		commands.put("animals", new AnimalsCommand(this));
+		commands.put("villagers", new VillagersCommand(this));
+
+        pool.start();
 	}
 
 	@Override
@@ -37,6 +41,7 @@ public class MobLimiter extends JavaPlugin implements Listener {
 		for (Chunk c : getServer().getWorlds().get(0).getLoadedChunks()) {
 			CreatureUtil.purgeCreatures(c);
 		}
+        pool.interrupt();
 	}
 
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {

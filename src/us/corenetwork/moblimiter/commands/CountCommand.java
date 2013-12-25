@@ -1,27 +1,30 @@
 package us.corenetwork.moblimiter.commands;
 
 import java.util.HashMap;
+import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.DyeColor;
+import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-import us.corenetwork.moblimiter.CreatureSettings;
-import us.corenetwork.moblimiter.CreatureSettingsStorage;
-import us.corenetwork.moblimiter.Setting;
-import us.corenetwork.moblimiter.Settings;
+import us.corenetwork.moblimiter.*;
 import us.corenetwork.moblimiter.CreatureSettingsStorage.CreatureGroup;
 import us.corenetwork.moblimiter.CreatureSettingsStorage.CreatureGroupSettings;
-import us.corenetwork.moblimiter.CreatureUtil;
-import us.corenetwork.moblimiter.Util;
 
 public abstract class CountCommand extends BaseCommand {
 	private CreatureGroup group;
+
+    private HashMap<Player, Cleanup> cleanups = new HashMap<Player, Cleanup>();
 	
-	public CountCommand(CreatureGroup group)
-	{
+	public CountCommand(MobLimiter plugin, CreatureGroup group) {
+        super(plugin);
 		needPlayer = true;
 		this.group = group;
 	}
@@ -29,70 +32,175 @@ public abstract class CountCommand extends BaseCommand {
 	@Override
 	public void run(CommandSender sender, String[] args) {
 		Player player = (Player) sender;
-		Chunk playerChunk = player.getLocation().getChunk();
-		CreatureGroupSettings groupSettings = CreatureSettingsStorage.getGroupSettings(group); 
-		
-		HashMap<CreatureSettings, Integer> perCreatureCountsChunk = new HashMap<CreatureSettings, Integer>(); 
-		int allCountChunk = 0;
 
-		HashMap<CreatureSettings, Integer> perCreatureCountsViewDistance = new HashMap<CreatureSettings, Integer>(); 
-		int allCountViewDistance = 0;
-		
-		boolean tooMany = false;
-		
-		for (CreatureSettings settings : groupSettings.creatureSettings.values())
-		{
-			perCreatureCountsChunk.put(settings, 0);
-			perCreatureCountsViewDistance.put(settings, 0);
-		}
-		
-		Iterable<Creature> viewDistanceCreatures = CreatureUtil.getCreaturesInRange(playerChunk);
-		Entity[] chunkCreatures = playerChunk.getEntities();
+        boolean visualize = args.length > 0 && args[0].equals("show");
 
-		for (Entity e : chunkCreatures)
-		{
-			if (e instanceof Creature)
-			{
-				CreatureSettings creatureSettings = groupSettings.creatureSettings.get(e.getType());
-				if (creatureSettings == null)
-					continue;
-				
-				int curCount = perCreatureCountsChunk.get(creatureSettings);
-				
-				allCountChunk++;
-				perCreatureCountsChunk.put(creatureSettings, curCount + 1);				
-			}
-		}
-		
-		for (Creature c : viewDistanceCreatures)
-		{
-			CreatureSettings creatureSettings = groupSettings.creatureSettings.get(c.getType());
-			if (creatureSettings == null)
-				continue;
-				
-			int curCount = perCreatureCountsViewDistance.get(creatureSettings);
-			
-			allCountViewDistance++;
-			perCreatureCountsViewDistance.put(creatureSettings, curCount + 1);
-			
-			if (!tooMany)
-			{
-				tooMany = curCount > creatureSettings.getViewDistanceLimit() || allCountChunk > groupSettings.globalViewDistanceLimit;
-			}
-		}
-		
-		messageCount(player, groupSettings.groupPlural, allCountChunk, groupSettings.globalChunkLimit, allCountViewDistance, groupSettings.globalViewDistanceLimit);
-		
-		for (CreatureSettings settings : groupSettings.creatureSettings.values())
-		{
-			messageCount(player, settings.getPluralName(), perCreatureCountsChunk.get(settings), settings.getChunkLimit(), perCreatureCountsViewDistance.get(settings), settings.getViewDistanceLimit());
-		}
-		
-		if (tooMany)
-		{
-			Util.Message(Settings.getString(Setting.MESSAGE_TOO_MANY), sender);
-		}
+        if (visualize) {
+            visualize(player);
+        } else {
+            showCount(player);
+        }
 	}
+
+    private void visualize(Player player) {
+        Cleanup cleanup = cleanups.get(player);
+
+        if (cleanup != null) {
+            if (Bukkit.getScheduler().isQueued(cleanup.getTaskId())) {
+                Bukkit.getScheduler().cancelTask(cleanup.getTaskId());
+                cleanup.fired = true;
+                cleanup.run();
+            }
+        }
+
+        CreatureGroupSettings group = CreatureSettingsStorage.getGroupSettings(this.group);
+
+        int cx = player.getLocation().getChunk().getX();
+        int cz = player.getLocation().getChunk().getZ();
+
+        int drawY = player.getLocation().getBlockY() + 10;
+
+        HashMap<Chunk, Float> limits = new HashMap();
+
+        for (int x = cx - 6; x < cx + 6; x++) {
+            for (int z = cz - 6; z < cz + 6; z++) {
+                Chunk chunk = player.getLocation().getWorld().getChunkAt(x, z);
+                Entity creatures[] = chunk.getEntities();
+
+                HashMap<EntityType, Integer> count = new HashMap<EntityType, Integer>();
+
+                for (Entity creature : creatures) {
+                    Integer value = count.get(creature.getType());
+                    if (value == null) {
+                        value = 0;
+                    }
+                    value++;
+                    count.put(creature.getType(), value);
+                }
+
+                float max = 0;
+
+                int sum = 0;
+                for (Map.Entry<EntityType, Integer> e : count.entrySet()) {
+                    CreatureSettings settings = group.creatureSettings.get(e.getKey());
+                    if (settings != null) {
+                        float full = (float) e.getValue() / (float) settings.getChunkLimit();
+                        if (full > max) {
+                            max = full;
+                        }
+                        sum  += e.getValue();
+                    }
+                }
+
+                float full = (float) sum / group.globalChunkLimit;
+
+                if (full > max) {
+                    max = full;
+                }
+
+                limits.put(chunk, max);
+
+                int id = Settings.getInt(Setting.BLOCK_NOT_APPLICABLE_ID);
+                int color = Settings.getInt(Setting.BLOCK_NOT_APPLICABLE_DATA);
+                if (max > 0) {
+                    id = Settings.getInt(Setting.BLOCK_BELOW_80_ID);
+                    color = Settings.getInt(Setting.BLOCK_BELOW_80_DATA);
+                }
+                if (max >= 0.8) {
+                    id = Settings.getInt(Setting.BLOCK_BELOW_90_ID);
+                    color = Settings.getInt(Setting.BLOCK_BELOW_90_DATA);
+                }
+                if (max >= 0.9) {
+                    id = Settings.getInt(Setting.BLOCK_BELOW_100_ID);
+                    color = Settings.getInt(Setting.BLOCK_BELOW_100_DATA);
+                }
+                if (max > 1) {
+                    id = Settings.getInt(Setting.BLOCK_EXCEEDS_LIMIT_ID);
+                    color = Settings.getInt(Setting.BLOCK_EXCEEDS_LIMIT_DATA);
+                }
+                for (int bx = 0; bx < 16; bx++) {
+                    for (int bz = 0; bz < 16; bz++) {
+                        Block block = chunk.getBlock(bx, drawY, bz);
+
+                        if (bx == 0 || bx == 15 || bz == 0 || bz == 15) {
+                            player.sendBlockChange(block.getLocation(), id, (byte) color);
+                        }
+                    }
+                }
+            }
+        }
+
+        cleanup = new Cleanup(cx, cz, drawY, player.getWorld(), player);
+        cleanup.setTaskId(
+                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, cleanup, 10 * 20));
+        cleanups.put(player, cleanup);
+    }
+
+    private void showCount(Player player) {
+        Chunk playerChunk = player.getLocation().getChunk();
+        CreatureGroupSettings groupSettings = CreatureSettingsStorage.getGroupSettings(group);
+
+        HashMap<CreatureSettings, Integer> perCreatureCountsChunk = new HashMap<CreatureSettings, Integer>();
+        int allCountChunk = 0;
+
+        HashMap<CreatureSettings, Integer> perCreatureCountsViewDistance = new HashMap<CreatureSettings, Integer>();
+        int allCountViewDistance = 0;
+
+        boolean tooMany = false;
+
+        for (CreatureSettings settings : groupSettings.creatureSettings.values())
+        {
+            perCreatureCountsChunk.put(settings, 0);
+            perCreatureCountsViewDistance.put(settings, 0);
+        }
+
+        Iterable<Creature> viewDistanceCreatures = CreatureUtil.getCreaturesInRange(playerChunk);
+        Entity[] chunkCreatures = playerChunk.getEntities();
+
+        for (Entity e : chunkCreatures)
+        {
+            if (e instanceof Creature)
+            {
+                CreatureSettings creatureSettings = groupSettings.creatureSettings.get(e.getType());
+                if (creatureSettings == null)
+                    continue;
+
+                int curCount = perCreatureCountsChunk.get(creatureSettings);
+
+                allCountChunk++;
+                perCreatureCountsChunk.put(creatureSettings, curCount + 1);
+            }
+        }
+
+        for (Creature c : viewDistanceCreatures)
+        {
+            CreatureSettings creatureSettings = groupSettings.creatureSettings.get(c.getType());
+            if (creatureSettings == null)
+                continue;
+
+            int curCount = perCreatureCountsViewDistance.get(creatureSettings);
+
+            allCountViewDistance++;
+            perCreatureCountsViewDistance.put(creatureSettings, curCount + 1);
+
+            if (!tooMany)
+            {
+                tooMany = curCount > creatureSettings.getViewDistanceLimit() || allCountChunk > groupSettings.globalViewDistanceLimit;
+            }
+        }
+
+        messageCount(player, groupSettings.groupPlural, allCountChunk, groupSettings.globalChunkLimit, allCountViewDistance, groupSettings.globalViewDistanceLimit);
+
+        for (CreatureSettings settings : groupSettings.creatureSettings.values())
+        {
+            messageCount(player, settings.getPluralName(), perCreatureCountsChunk.get(settings), settings.getChunkLimit(), perCreatureCountsViewDistance.get(settings), settings.getViewDistanceLimit());
+        }
+
+        if (tooMany)
+        {
+            Util.Message(Settings.getString(Setting.MESSAGE_TOO_MANY), player);
+        }
+    }
 
 	
 	private void messageCount(Player player, String creature, int chunkCount, int chunkMax, int vdCount, int vdMax)
@@ -114,4 +222,51 @@ public abstract class CountCommand extends BaseCommand {
 		//"&cYou have too many mobs for the server to handle. Please, if you can, consider killing some or moving them further to keep the server healthy. Many thanks, we appreciate it.");
 
 	}
+
+    class Cleanup implements Runnable {
+        private int cx, cz, height;
+        private World world;
+        private Player player;
+        private int taskId = -1;
+        boolean fired = false;
+
+        Cleanup(int cx, int cz, int height, World world, Player player) {
+            this.cx = cx;
+            this.cz = cz;
+            this.height = height;
+            this.world = world;
+            this.player = player;
+        }
+
+        @Override
+        public void run() {
+            if (!fired) {
+                fired = true;
+                plugin.pool.addTask(this);
+            } else {
+                for (int x = cx - 6; x < cx + 6; x++) {
+                    for (int z = cz - 6; z < cz + 6; z++) {
+                        Chunk chunk = world.getChunkAt(x, z);
+                        for (int bx = 0; bx < 16; bx++) {
+                            for (int bz = 0; bz < 16; bz++) {
+                                Block block = chunk.getBlock(bx, height, bz);
+
+                                if (bx == 0 || bx == 15 || bz == 0 || bz == 15) {
+                                    player.sendBlockChange(block.getLocation(), block.getTypeId(), block.getData());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public void setTaskId(int taskId) {
+            this.taskId = taskId;
+        }
+
+        public int getTaskId() {
+            return taskId;
+        }
+    }
 }
