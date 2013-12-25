@@ -6,20 +6,21 @@ import java.io.IOException;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+
 public class IO {
 	public static YamlConfiguration config;
 
-	public static void LoadSettings()
-	{
+	public static void LoadSettings() {
 		try {
 			config = new YamlConfiguration();
 
-			if (!new File(MobLimiter.instance.getDataFolder(),"config.yml").exists()) config.save(new File(MobLimiter.instance.getDataFolder(),"config.yml"));
+			if (!new File(MobLimiter.instance.getDataFolder(), "config.yml").exists())
+				config.save(new File(MobLimiter.instance.getDataFolder(), "config.yml"));
 
-			config.load(new File(MobLimiter.instance.getDataFolder(),"config.yml"));
-			for (Setting s : Setting.values())
-			{
-				if (config.get(s.getString()) == null && s.getDefault() != null) config.set(s.getString(), s.getDefault());
+			config.load(new File(MobLimiter.instance.getDataFolder(), "config.yml"));
+			for (Setting s : Setting.values()) {
+				if (config.get(s.getString()) == null && s.getDefault() != null)
+					config.set(s.getString(), s.getDefault());
 			}
 
 			saveConfig();
@@ -36,10 +37,9 @@ public class IO {
 		}
 	}
 
-	public static void saveConfig()
-	{
+	public static void saveConfig() {
 		try {
-			config.save(new File(MobLimiter.instance.getDataFolder(),"config.yml"));
+			config.save(new File(MobLimiter.instance.getDataFolder(), "config.yml"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

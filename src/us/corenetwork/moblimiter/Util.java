@@ -1,11 +1,11 @@
 package us.corenetwork.moblimiter;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 
 public class Util {
-	public static void Message(String message, CommandSender sender)
-	{
+	public static void Message(String message, CommandSender sender) {
 		message = message.replaceAll("\\&([0-9abcdefklmnor])", ChatColor.COLOR_CHAR + "$1");
 
 		final String newLine = "\\[NEWLINE\\]";
@@ -22,8 +22,8 @@ public class Util {
 				continue;
 
 			char lastColor = lines[i - 1].charAt(lastColorChar + 1);
-			lines[i] = Character.toString(ChatColor.COLOR_CHAR).concat(Character.toString(lastColor)).concat(lines[i]);	
-		}		
+			lines[i] = Character.toString(ChatColor.COLOR_CHAR).concat(Character.toString(lastColor)).concat(lines[i]);
+		}
 
 		for (int i = 0; i < lines.length; i++)
 			sender.sendMessage(lines[i]);
@@ -49,15 +49,12 @@ public class Util {
 		}
 	}
 
-	public static int flatDistance(Location a, Location b)
-	{
+	public static int flatDistance(Location a, Location b) {
 		return ((a.getBlockX() - b.getBlockX()) * (a.getBlockX() - b.getBlockX())) + ((a.getBlockZ() - b.getBlockZ()) * (a.getBlockZ() - b.getBlockZ()));
 	}
 
-	public static boolean hasPermission(CommandSender player, String permission)
-	{
-		while (true)
-		{
+	public static boolean hasPermission(CommandSender player, String permission) {
+		while (true) {
 			if (player.hasPermission(permission))
 				return true;
 
@@ -71,20 +68,19 @@ public class Util {
 			if (lastIndex < 0)
 				return false;
 
-			permission = permission.substring(0, lastIndex).concat(".*");  
+			permission = permission.substring(0, lastIndex).concat(".*");
 		}
 	}
-	
-	public static char getPercentageColor(double percentage)
-	{
-		
+
+	public static char getPercentageColor(double percentage) {
+
 		if (percentage < 0.5)
 			return '2';
 		else if (percentage < 0.7)
 			return 'e';
 		else if (percentage < 1.0)
 			return '6';
-		else 
+		else
 			return 'c';
 
 	}
