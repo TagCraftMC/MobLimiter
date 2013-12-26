@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
-import org.bukkit.DyeColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
@@ -21,7 +20,7 @@ import us.corenetwork.moblimiter.CreatureSettingsStorage.CreatureGroupSettings;
 public abstract class CountCommand extends BaseCommand {
 	private CreatureGroup group;
 
-	private HashMap<Player, Cleanup> cleanups = new HashMap<Player, Cleanup>();
+	static private HashMap<Player, Cleanup> cleanups = new HashMap<Player, Cleanup>();
 
 	public CountCommand(MobLimiter plugin, CreatureGroup group) {
 		super(plugin);
@@ -36,13 +35,13 @@ public abstract class CountCommand extends BaseCommand {
 		boolean visualize = args.length > 0 && args[0].equals("show");
 
 		if (visualize) {
-			visualize(player);
+			visualize(player, args);
 		} else {
 			showCount(player);
 		}
 	}
 
-	private void visualize(Player player) {
+	private void visualize(Player player, String[] args) {
 		Cleanup cleanup = cleanups.get(player);
 
 		if (cleanup != null) {
@@ -100,41 +99,36 @@ public abstract class CountCommand extends BaseCommand {
 
 				limits.put(chunk, max);
 
-				int id = Settings.getInt(Setting.BLOCK_NOT_APPLICABLE_ID);
-				int color = Settings.getInt(Setting.BLOCK_NOT_APPLICABLE_DATA);
+				int id = Settings.getInt(Setting.GRID_NONE_ID);
+				int color = Settings.getInt(Setting.GRID_NONE_DATA);
 				if (max > 0) {
-					id = Settings.getInt(Setting.BLOCK_BELOW_80_ID);
-					color = Settings.getInt(Setting.BLOCK_BELOW_80_DATA);
+					id = Settings.getInt(Setting.GRID_LOW_ID);
+					color = Settings.getInt(Setting.GRID_LOW_DATA);
 				}
 				if (max >= 0.8) {
-					id = Settings.getInt(Setting.BLOCK_BELOW_90_ID);
-					color = Settings.getInt(Setting.BLOCK_BELOW_90_DATA);
+					id = Settings.getInt(Setting.GRID_MEDIUM_ID);
+					color = Settings.getInt(Setting.GRID_MEDIUM_DATA);
 				}
 				if (max >= 0.9) {
-					id = Settings.getInt(Setting.BLOCK_BELOW_100_ID);
-					color = Settings.getInt(Setting.BLOCK_BELOW_100_DATA);
+					id = Settings.getInt(Setting.GRID_HIGH_ID);
+					color = Settings.getInt(Setting.GRID_HIGH_DATA);
 				}
 				if (max > 1) {
-					id = Settings.getInt(Setting.BLOCK_EXCEEDS_LIMIT_ID);
-					color = Settings.getInt(Setting.BLOCK_EXCEEDS_LIMIT_DATA);
+					id = Settings.getInt(Setting.GRID_EXCEED_ID);
+					color = Settings.getInt(Setting.GRID_EXCEED_DATA);
 				}
-				for (int bx = 0; bx < 16; bx++) {
-					for (int bz = 0; bz < 16; bz++) {
-						Block block = chunk.getBlock(bx, drawY, bz);
 
-						boolean send = false;
-						if (full <= 0) {
-							if (bx == 0 && bz == 0) {
-								send = true;
-							}
-						} else {
+				if (full <= 0) {
+					Block block = chunk.getBlock(0, drawY, 0);
+					player.sendBlockChange(block.getLocation(), id, (byte) color);
+				} else {
+					for (int bx = 0; bx < 16; bx++) {
+						for (int bz = 0; bz < 16; bz++) {
+							Block block = chunk.getBlock(bx, drawY, bz);
+
 							if (bx == 0 || bx == 15 || bz == 0 || bz == 15) {
-								send = true;
+								player.sendBlockChange(block.getLocation(), id, (byte) color);
 							}
-						}
-
-						if (send) {
-							player.sendBlockChange(block.getLocation(), id, (byte) color);
 						}
 					}
 				}

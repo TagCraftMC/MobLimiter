@@ -18,20 +18,20 @@ public enum Setting {
 	MESSAGE_NO_HORSE_BREEDING("Messages.NoHorseBreeding", "Sorry, you are not allowed to breed horses. Find another one in the wild."),
 
 
-	BLOCK_NOT_APPLICABLE_ID("Blocks.NotApplicable.Id", Material.WOOL.getId()),
-	BLOCK_NOT_APPLICABLE_DATA("Blocks.NotApplicable.Data", (int) DyeColor.GRAY.getWoolData()),
+	GRID_NONE_ID("Grid.None.Id", Material.GLASS.getId()),
+	GRID_NONE_DATA("Grid.None.Data", 0),
 
-	BLOCK_BELOW_80_ID("Blocks.Below80.Id", Material.WOOL.getId()),
-	BLOCK_BELOW_80_DATA("Blocks.Below80.Data", (int) DyeColor.GREEN.getWoolData()),
+	GRID_LOW_ID("Grid.Low.Id", Material.WOOL.getId()),
+	GRID_LOW_DATA("Grid.Low.Data", (int) DyeColor.LIME.getWoolData()),
 
-	BLOCK_BELOW_90_ID("Blocks.Below90.Id", Material.WOOL.getId()),
-	BLOCK_BELOW_90_DATA("Blocks.Below90.Data", (int) DyeColor.YELLOW.getWoolData()),
+	GRID_MEDIUM_ID("Grid.Medium.Id", Material.WOOL.getId()),
+	GRID_MEDIUM_DATA("Grid.Medium.Data", (int) DyeColor.YELLOW.getWoolData()),
 
-	BLOCK_BELOW_100_ID("Blocks.Below100.Id", Material.WOOL.getId()),
-	BLOCK_BELOW_100_DATA("Blocks.Below100.Data", (int) DyeColor.ORANGE.getWoolData()),
+	GRID_HIGH_ID("Grid.High.Id", Material.WOOL.getId()),
+	GRID_HIGH_DATA("Grid.High.Data", (int) DyeColor.ORANGE.getWoolData()),
 
-	BLOCK_EXCEEDS_LIMIT_ID("Blocks.ExceedsLimit.Id", Material.WOOL.getId()),
-	BLOCK_EXCEEDS_LIMIT_DATA("Blocks.ExceedsLimit.Data", (int) DyeColor.RED.getWoolData()),
+	GRID_EXCEED_ID("Grid.Exceed.Id", Material.WOOL.getId()),
+	GRID_EXCEED_DATA("Grid.Exceed.Data", (int) DyeColor.RED.getWoolData()),
 
 	GRID_DURATION("Grid.Duration", 30*20);
 
