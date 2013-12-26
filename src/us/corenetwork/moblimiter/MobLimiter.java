@@ -31,8 +31,8 @@ public class MobLimiter extends JavaPlugin implements Listener
 
 		this.getServer().getPluginManager().registerEvents(new MobLimiterListener(), this);
 
-		commands.put("animals", new AnimalsCommand(this));
-		commands.put("villagers", new VillagersCommand(this));
+		commands.put("animals", new AnimalsCommand());
+		commands.put("villagers", new VillagersCommand());
 
 		pool.start();
 	}

@@ -2,7 +2,6 @@ package us.corenetwork.moblimiter.commands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import us.corenetwork.moblimiter.MobLimiter;
 import us.corenetwork.moblimiter.Setting;
 import us.corenetwork.moblimiter.Settings;
 import us.corenetwork.moblimiter.Util;
@@ -11,12 +10,6 @@ public abstract class BaseCommand
 {
 	public Boolean needPlayer;
 	public String permission;
-	public MobLimiter plugin;
-
-	public BaseCommand(MobLimiter plugin)
-	{
-		this.plugin = plugin;
-	}
 
 	public abstract void run(CommandSender sender, String[] args);
 

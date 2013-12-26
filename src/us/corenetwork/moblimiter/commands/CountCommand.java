@@ -22,9 +22,8 @@ public abstract class CountCommand extends BaseCommand
 
 	static private HashMap<Player, Cleanup> cleanups = new HashMap<Player, Cleanup>();
 
-	public CountCommand(MobLimiter plugin, CreatureGroup group)
+	public CountCommand(CreatureGroup group)
 	{
-		super(plugin);
 		needPlayer = true;
 		this.group = group;
 	}
@@ -147,7 +146,7 @@ public abstract class CountCommand extends BaseCommand
 		if (autocleanup)
 		{
 			cleanup.setTaskId(
-					Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, cleanup, Settings.getInt(Setting.GRID_DURATION)));
+					Bukkit.getScheduler().scheduleSyncDelayedTask(MobLimiter.instance, cleanup, Settings.getInt(Setting.GRID_DURATION)));
 		}
 		cleanups.put(player, cleanup);
 	}
@@ -278,7 +277,7 @@ public abstract class CountCommand extends BaseCommand
 			if (!fired)
 			{
 				fired = true;
-				plugin.pool.addTask(this);
+				MobLimiter.instance.pool.addTask(this);
 			} else
 			{
 				for (int x = cx - 6; x < cx + 6; x++)

@@ -1,14 +1,13 @@
 package us.corenetwork.moblimiter.commands;
 
 import us.corenetwork.moblimiter.CreatureSettingsStorage.CreatureGroup;
-import us.corenetwork.moblimiter.MobLimiter;
 
 public class VillagersCommand extends CountCommand
 {
 
-	public VillagersCommand(MobLimiter plugin)
+	public VillagersCommand()
 	{
-		super(plugin, CreatureGroup.VILLAGES);
+		super(CreatureGroup.VILLAGES);
 		permission = "villagers";
 	}
 }
