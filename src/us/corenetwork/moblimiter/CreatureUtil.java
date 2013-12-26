@@ -73,7 +73,8 @@ public class CreatureUtil
 					if (allCount >= settings.globalChunkLimit || creatureCount >= creatureSettings.getChunkLimit())
 					{
 						e.remove();
-					} else
+					}
+					else
 					{
 						allCount++;
 						perCreatureCounts.put(creatureSettings, creatureCount + 1);

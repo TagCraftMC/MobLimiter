@@ -54,7 +54,8 @@ public class CreatureSettingsStorage
 			try
 			{
 				type = EntityType.valueOf(e.getKey());
-			} catch (IllegalArgumentException err)
+			}
+			catch (IllegalArgumentException err)
 			{
 				MLLog.warning("Invalid config! " + e.getKey() + " is not valid entity type!");
 				continue;

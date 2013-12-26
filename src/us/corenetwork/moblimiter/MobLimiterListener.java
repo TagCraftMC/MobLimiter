@@ -102,7 +102,8 @@ public class MobLimiterListener implements Listener
 
 				message = message.replace("<MobNamePlural>", creatureSettings.getPluralName());
 				message = message.replace("<MobTypeLimit>", Integer.toString(creatureSettings.getViewDistanceLimit()));
-			} else
+			}
+			else
 			{
 				message = Settings.getString(Setting.MESSAGE_BREED_LIMIT_ALL_MOBS);
 

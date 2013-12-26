@@ -40,10 +40,12 @@ public abstract class CountCommand extends BaseCommand
 		if (visualize && !clear)
 		{
 			visualize(player, !keep);
-		} else if (!clear)
+		}
+		else if (!clear)
 		{
 			showCount(player);
-		} else if (clear)
+		}
+		else if (clear)
 		{
 			cleanup(player);
 		}
@@ -278,7 +280,8 @@ public abstract class CountCommand extends BaseCommand
 			{
 				fired = true;
 				MobLimiter.instance.pool.addTask(this);
-			} else
+			}
+			else
 			{
 				for (int x = cx - 6; x < cx + 6; x++)
 				{

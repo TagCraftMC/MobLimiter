@@ -40,7 +40,8 @@ public class Util
 		{
 			Integer.parseInt(text);
 			return true;
-		} catch (NumberFormatException e)
+		}
+		catch (NumberFormatException e)
 		{
 			return false;
 		}
@@ -52,7 +53,8 @@ public class Util
 		{
 			Double.parseDouble(text);
 			return true;
-		} catch (NumberFormatException e)
+		}
+		catch (NumberFormatException e)
 		{
 			return false;
 		}
