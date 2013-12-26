@@ -4,7 +4,8 @@ package us.corenetwork.moblimiter;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 
-public enum Setting {
+public enum Setting
+{
 
 	VIEW_DISTANCE_CHUNKS("ViewDistanceChunks", 10),
 	NO_HORSE_BREED("NoHorseBreed", true),
@@ -33,21 +34,24 @@ public enum Setting {
 	GRID_EXCEED_ID("Grid.Exceed.Id", Material.WOOL.getId()),
 	GRID_EXCEED_DATA("Grid.Exceed.Data", (int) DyeColor.RED.getWoolData()),
 
-	GRID_DURATION("Grid.Duration", 30*20);
+	GRID_DURATION("Grid.Duration", 30 * 20);
 
 	private String name;
 	private Object def;
 
-	private Setting(String Name, Object Def) {
+	private Setting(String Name, Object Def)
+	{
 		name = Name;
 		def = Def;
 	}
 
-	public String getString() {
+	public String getString()
+	{
 		return name;
 	}
 
-	public Object getDefault() {
+	public Object getDefault()
+	{
 		return def;
 	}
 }

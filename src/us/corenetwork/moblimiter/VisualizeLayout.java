@@ -6,7 +6,8 @@ import org.bukkit.entity.Player;
 /**
  * Created by tux on 26.12.13.
  */
-public class VisualizeLayout {
+public class VisualizeLayout
+{
 	public static final int WIDTH = 16, HEIGHT = 16;
 
 	public static final VisualizeLayout LAYOUT_NONE = new VisualizeLayout(new String[]{
@@ -97,25 +98,33 @@ public class VisualizeLayout {
 
 	boolean layout[][] = null;
 
-	public VisualizeLayout(String [] layout) {
+	public VisualizeLayout(String[] layout)
+	{
 		this.layout = convert(layout);
 	}
 
-	public void draw(Chunk chunk, Player player, int height, int block, byte data) {
-		for (int x = 0; x < WIDTH; x++) {
-			for (int y = 0; y < HEIGHT; y++) {
-				if (layout[x][y]) {
+	public void draw(Chunk chunk, Player player, int height, int block, byte data)
+	{
+		for (int x = 0; x < WIDTH; x++)
+		{
+			for (int y = 0; y < HEIGHT; y++)
+			{
+				if (layout[x][y])
+				{
 					player.sendBlockChange(chunk.getBlock(x, height, y).getLocation(), block, data);
 				}
 			}
 		}
 	}
 
-	private static boolean[][] convert(String[] layout) {
+	private static boolean[][] convert(String[] layout)
+	{
 		boolean r[][] = new boolean[WIDTH][];
-		for (int x = 0; x < WIDTH; x++) {
+		for (int x = 0; x < WIDTH; x++)
+		{
 			r[x] = new boolean[HEIGHT];
-			for (int y = 0; y < HEIGHT; y++) {
+			for (int y = 0; y < HEIGHT; y++)
+			{
 				r[x][y] = layout[y].charAt(x) != ' ';
 			}
 		}

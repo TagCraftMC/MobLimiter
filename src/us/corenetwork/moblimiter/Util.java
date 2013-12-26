@@ -4,14 +4,17 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 
-public class Util {
-	public static void Message(String message, CommandSender sender) {
+public class Util
+{
+	public static void Message(String message, CommandSender sender)
+	{
 		message = message.replaceAll("\\&([0-9abcdefklmnor])", ChatColor.COLOR_CHAR + "$1");
 
 		final String newLine = "\\[NEWLINE\\]";
 		String[] lines = message.split(newLine);
 
-		for (int i = 0; i < lines.length; i++) {
+		for (int i = 0; i < lines.length; i++)
+		{
 			lines[i] = lines[i].trim();
 
 			if (i == 0)
@@ -31,30 +34,39 @@ public class Util {
 
 	}
 
-	public static Boolean isInteger(String text) {
-		try {
+	public static Boolean isInteger(String text)
+	{
+		try
+		{
 			Integer.parseInt(text);
 			return true;
-		} catch (NumberFormatException e) {
+		} catch (NumberFormatException e)
+		{
 			return false;
 		}
 	}
 
-	public static Boolean isDouble(String text) {
-		try {
+	public static Boolean isDouble(String text)
+	{
+		try
+		{
 			Double.parseDouble(text);
 			return true;
-		} catch (NumberFormatException e) {
+		} catch (NumberFormatException e)
+		{
 			return false;
 		}
 	}
 
-	public static int flatDistance(Location a, Location b) {
+	public static int flatDistance(Location a, Location b)
+	{
 		return ((a.getBlockX() - b.getBlockX()) * (a.getBlockX() - b.getBlockX())) + ((a.getBlockZ() - b.getBlockZ()) * (a.getBlockZ() - b.getBlockZ()));
 	}
 
-	public static boolean hasPermission(CommandSender player, String permission) {
-		while (true) {
+	public static boolean hasPermission(CommandSender player, String permission)
+	{
+		while (true)
+		{
 			if (player.hasPermission(permission))
 				return true;
 
@@ -72,7 +84,8 @@ public class Util {
 		}
 	}
 
-	public static char getPercentageColor(double percentage) {
+	public static char getPercentageColor(double percentage)
+	{
 
 		if (percentage < 0.5)
 			return '2';

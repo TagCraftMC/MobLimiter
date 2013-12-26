@@ -1,8 +1,5 @@
 package us.corenetwork.moblimiter.commands;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
@@ -12,40 +9,49 @@ import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-
 import us.corenetwork.moblimiter.*;
 import us.corenetwork.moblimiter.CreatureSettingsStorage.CreatureGroup;
 import us.corenetwork.moblimiter.CreatureSettingsStorage.CreatureGroupSettings;
 
-public abstract class CountCommand extends BaseCommand {
+import java.util.HashMap;
+import java.util.Map;
+
+public abstract class CountCommand extends BaseCommand
+{
 	private CreatureGroup group;
 
 	static private HashMap<Player, Cleanup> cleanups = new HashMap<Player, Cleanup>();
 
-	public CountCommand(MobLimiter plugin, CreatureGroup group) {
+	public CountCommand(MobLimiter plugin, CreatureGroup group)
+	{
 		super(plugin);
 		needPlayer = true;
 		this.group = group;
 	}
 
 	@Override
-	public void run(CommandSender sender, String[] args) {
+	public void run(CommandSender sender, String[] args)
+	{
 		Player player = (Player) sender;
 
 		boolean visualize = args.length > 0 && args[0].equals("show");
 		boolean keep = args.length > 1 && args[1].equals("keep");
 		boolean clear = args.length > 0 && args[0].equals("hide");
 
-		if (visualize && !clear) {
+		if (visualize && !clear)
+		{
 			visualize(player, !keep);
-		} else if (!clear) {
+		} else if (!clear)
+		{
 			showCount(player);
-		} else if (clear) {
+		} else if (clear)
+		{
 			cleanup(player);
 		}
 	}
 
-	private void visualize(Player player, boolean autocleanup) {
+	private void visualize(Player player, boolean autocleanup)
+	{
 		cleanup(player);
 		Cleanup cleanup;
 
@@ -58,16 +64,20 @@ public abstract class CountCommand extends BaseCommand {
 
 		HashMap<Chunk, Float> limits = new HashMap();
 
-		for (int x = cx - 6; x < cx + 6; x++) {
-			for (int z = cz - 6; z < cz + 6; z++) {
+		for (int x = cx - 6; x < cx + 6; x++)
+		{
+			for (int z = cz - 6; z < cz + 6; z++)
+			{
 				Chunk chunk = player.getLocation().getWorld().getChunkAt(x, z);
 				Entity creatures[] = chunk.getEntities();
 
 				HashMap<EntityType, Integer> count = new HashMap<EntityType, Integer>();
 
-				for (Entity creature : creatures) {
+				for (Entity creature : creatures)
+				{
 					Integer value = count.get(creature.getType());
-					if (value == null) {
+					if (value == null)
+					{
 						value = 0;
 					}
 					value++;
@@ -77,11 +87,14 @@ public abstract class CountCommand extends BaseCommand {
 				float max = 0;
 
 				int sum = 0;
-				for (Map.Entry<EntityType, Integer> e : count.entrySet()) {
+				for (Map.Entry<EntityType, Integer> e : count.entrySet())
+				{
 					CreatureSettings settings = group.creatureSettings.get(e.getKey());
-					if (settings != null) {
+					if (settings != null)
+					{
 						float full = (float) e.getValue() / (float) settings.getChunkLimit();
-						if (full > max) {
+						if (full > max)
+						{
 							max = full;
 						}
 						sum += e.getValue();
@@ -90,7 +103,8 @@ public abstract class CountCommand extends BaseCommand {
 
 				float full = (float) sum / group.globalChunkLimit;
 
-				if (full > max) {
+				if (full > max)
+				{
 					max = full;
 				}
 
@@ -99,23 +113,27 @@ public abstract class CountCommand extends BaseCommand {
 				int id = Settings.getInt(Setting.GRID_NONE_ID);
 				int color = Settings.getInt(Setting.GRID_NONE_DATA);
 				VisualizeLayout layout = VisualizeLayout.LAYOUT_NONE;
-				
-				if (max > 0) {
+
+				if (max > 0)
+				{
 					id = Settings.getInt(Setting.GRID_LOW_ID);
 					color = Settings.getInt(Setting.GRID_LOW_DATA);
 					layout = VisualizeLayout.LAYOUT_LOW;
 				}
-				if (max >= 0.8) {
+				if (max >= 0.8)
+				{
 					id = Settings.getInt(Setting.GRID_MEDIUM_ID);
 					color = Settings.getInt(Setting.GRID_MEDIUM_DATA);
 					layout = VisualizeLayout.LAYOUT_MEDIUM;
 				}
-				if (max >= 0.9) {
+				if (max >= 0.9)
+				{
 					id = Settings.getInt(Setting.GRID_HIGH_ID);
 					color = Settings.getInt(Setting.GRID_HIGH_DATA);
 					layout = VisualizeLayout.LAYOUT_HIGH;
 				}
-				if (max > 1) {
+				if (max > 1)
+				{
 					id = Settings.getInt(Setting.GRID_EXCEED_ID);
 					color = Settings.getInt(Setting.GRID_EXCEED_DATA);
 					layout = VisualizeLayout.LAYOUT_EXCEED;
@@ -126,18 +144,22 @@ public abstract class CountCommand extends BaseCommand {
 		}
 
 		cleanup = new Cleanup(cx, cz, drawY, player.getWorld(), player);
-		if (autocleanup) {
+		if (autocleanup)
+		{
 			cleanup.setTaskId(
 					Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, cleanup, Settings.getInt(Setting.GRID_DURATION)));
 		}
 		cleanups.put(player, cleanup);
 	}
 
-	private void cleanup(Player player) {
+	private void cleanup(Player player)
+	{
 		Cleanup cleanup = cleanups.get(player);
 
-		if (cleanup != null) {
-			if (Bukkit.getScheduler().isQueued(cleanup.getTaskId())) {
+		if (cleanup != null)
+		{
+			if (Bukkit.getScheduler().isQueued(cleanup.getTaskId()))
+			{
 				Bukkit.getScheduler().cancelTask(cleanup.getTaskId());
 				cleanup.fired = true;
 				cleanup.run();
@@ -145,7 +167,8 @@ public abstract class CountCommand extends BaseCommand {
 		}
 	}
 
-	private void showCount(Player player) {
+	private void showCount(Player player)
+	{
 		Chunk playerChunk = player.getLocation().getChunk();
 		CreatureGroupSettings groupSettings = CreatureSettingsStorage.getGroupSettings(group);
 
@@ -157,7 +180,8 @@ public abstract class CountCommand extends BaseCommand {
 
 		boolean tooMany = false;
 
-		for (CreatureSettings settings : groupSettings.creatureSettings.values()) {
+		for (CreatureSettings settings : groupSettings.creatureSettings.values())
+		{
 			perCreatureCountsChunk.put(settings, 0);
 			perCreatureCountsViewDistance.put(settings, 0);
 		}
@@ -165,8 +189,10 @@ public abstract class CountCommand extends BaseCommand {
 		Iterable<Creature> viewDistanceCreatures = CreatureUtil.getCreaturesInRange(playerChunk);
 		Entity[] chunkCreatures = playerChunk.getEntities();
 
-		for (Entity e : chunkCreatures) {
-			if (e instanceof Creature) {
+		for (Entity e : chunkCreatures)
+		{
+			if (e instanceof Creature)
+			{
 				CreatureSettings creatureSettings = groupSettings.creatureSettings.get(e.getType());
 				if (creatureSettings == null)
 					continue;
@@ -178,7 +204,8 @@ public abstract class CountCommand extends BaseCommand {
 			}
 		}
 
-		for (Creature c : viewDistanceCreatures) {
+		for (Creature c : viewDistanceCreatures)
+		{
 			CreatureSettings creatureSettings = groupSettings.creatureSettings.get(c.getType());
 			if (creatureSettings == null)
 				continue;
@@ -188,24 +215,28 @@ public abstract class CountCommand extends BaseCommand {
 			allCountViewDistance++;
 			perCreatureCountsViewDistance.put(creatureSettings, curCount + 1);
 
-			if (!tooMany) {
+			if (!tooMany)
+			{
 				tooMany = curCount > creatureSettings.getViewDistanceLimit() || allCountChunk > groupSettings.globalViewDistanceLimit;
 			}
 		}
 
 		messageCount(player, groupSettings.groupPlural, allCountChunk, groupSettings.globalChunkLimit, allCountViewDistance, groupSettings.globalViewDistanceLimit);
 
-		for (CreatureSettings settings : groupSettings.creatureSettings.values()) {
+		for (CreatureSettings settings : groupSettings.creatureSettings.values())
+		{
 			messageCount(player, settings.getPluralName(), perCreatureCountsChunk.get(settings), settings.getChunkLimit(), perCreatureCountsViewDistance.get(settings), settings.getViewDistanceLimit());
 		}
 
-		if (tooMany) {
+		if (tooMany)
+		{
 			Util.Message(Settings.getString(Setting.MESSAGE_TOO_MANY), player);
 		}
 	}
 
 
-	private void messageCount(Player player, String creature, int chunkCount, int chunkMax, int vdCount, int vdMax) {
+	private void messageCount(Player player, String creature, int chunkCount, int chunkMax, int vdCount, int vdMax)
+	{
 		char chunkColor = Util.getPercentageColor((double) chunkCount / chunkMax);
 		char vdColor = Util.getPercentageColor((double) vdCount / vdMax);
 
@@ -224,14 +255,16 @@ public abstract class CountCommand extends BaseCommand {
 
 	}
 
-	class Cleanup implements Runnable {
+	class Cleanup implements Runnable
+	{
 		private int cx, cz, height;
 		private World world;
 		private Player player;
 		private int taskId = -1;
 		boolean fired = false;
 
-		Cleanup(int cx, int cz, int height, World world, Player player) {
+		Cleanup(int cx, int cz, int height, World world, Player player)
+		{
 			this.cx = cx;
 			this.cz = cz;
 			this.height = height;
@@ -240,19 +273,27 @@ public abstract class CountCommand extends BaseCommand {
 		}
 
 		@Override
-		public void run() {
-			if (!fired) {
+		public void run()
+		{
+			if (!fired)
+			{
 				fired = true;
 				plugin.pool.addTask(this);
-			} else {
-				for (int x = cx - 6; x < cx + 6; x++) {
-					for (int z = cz - 6; z < cz + 6; z++) {
+			} else
+			{
+				for (int x = cx - 6; x < cx + 6; x++)
+				{
+					for (int z = cz - 6; z < cz + 6; z++)
+					{
 						Chunk chunk = world.getChunkAt(x, z);
-						for (int bx = 0; bx < 16; bx++) {
-							for (int bz = 0; bz < 16; bz++) {
+						for (int bx = 0; bx < 16; bx++)
+						{
+							for (int bz = 0; bz < 16; bz++)
+							{
 								Block block = chunk.getBlock(bx, height, bz);
 
-								if (bx == 0 || bx == 15 || bz == 0 || bz == 15) {
+								if (bx == 0 || bx == 15 || bz == 0 || bz == 15)
+								{
 									player.sendBlockChange(block.getLocation(), block.getTypeId(), block.getData());
 								}
 							}
@@ -262,11 +303,13 @@ public abstract class CountCommand extends BaseCommand {
 			}
 		}
 
-		public void setTaskId(int taskId) {
+		public void setTaskId(int taskId)
+		{
 			this.taskId = taskId;
 		}
 
-		public int getTaskId() {
+		public int getTaskId()
+		{
 			return taskId;
 		}
 	}
