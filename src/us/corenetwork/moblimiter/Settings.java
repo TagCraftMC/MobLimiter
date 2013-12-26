@@ -3,8 +3,9 @@ package us.corenetwork.moblimiter;
 import java.util.List;
 
 
-public class Settings {
-	
+public class Settings
+{
+
 	public static Object getProperty(Setting setting)
 	{
 		Object property = IO.config.get(setting.getString());
@@ -13,34 +14,34 @@ public class Settings {
 			MLLog.warning("[FlatcoreWeekly] Configuration entry missing: " + setting.getString());
 			property = setting.getDefault();
 		}
-		
+
 		return property;
 	}
 
 	public static Boolean getBoolean(Setting setting)
 	{
-		return 	(Boolean) getProperty(setting);
+		return (Boolean) getProperty(setting);
 	}
-	
+
 	public static Long getLong(Setting setting)
 	{
-		return 	((Number) getProperty(setting)).longValue();
+		return ((Number) getProperty(setting)).longValue();
 	}
-	
+
 	public static Integer getInt(Setting setting)
 	{
-		return 	((Number) getProperty(setting)).intValue();
+		return ((Number) getProperty(setting)).intValue();
 	}
 
 	public static String getString(Setting setting)
 	{
-		return 	(String) getProperty(setting);
+		return (String) getProperty(setting);
 	}
-	
+
 	public static String getCommandDescription(String cmd, String type, String def)
 	{
 		String path = "CommandDescriptions." + type + "." + cmd;
-		
+
 		Object descO = IO.config.get(path);
 		if (descO == null)
 		{
@@ -48,13 +49,13 @@ public class Settings {
 			IO.saveConfig();
 			descO = IO.config.get(path);
 		}
-		
+
 		return (String) descO;
-		
+
 	}
-	
+
 	public static List<?> getList(Setting setting)
 	{
-		return 	(List<?>) getProperty(setting);
+		return (List<?>) getProperty(setting);
 	}
 }
