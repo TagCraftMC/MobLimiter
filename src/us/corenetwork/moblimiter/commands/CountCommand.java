@@ -33,24 +33,21 @@ public abstract class CountCommand extends BaseCommand {
 		Player player = (Player) sender;
 
 		boolean visualize = args.length > 0 && args[0].equals("show");
+		boolean keep = args.length > 1 && args[1].equals("keep");
+		boolean clear = args.length > 0 && args[0].equals("hide");
 
-		if (visualize) {
-			visualize(player, args);
-		} else {
+		if (visualize && !clear) {
+			visualize(player, !keep);
+		} else if (!clear) {
 			showCount(player);
+		} else if (clear) {
+			cleanup(player);
 		}
 	}
 
-	private void visualize(Player player, String[] args) {
-		Cleanup cleanup = cleanups.get(player);
-
-		if (cleanup != null) {
-			if (Bukkit.getScheduler().isQueued(cleanup.getTaskId())) {
-				Bukkit.getScheduler().cancelTask(cleanup.getTaskId());
-				cleanup.fired = true;
-				cleanup.run();
-			}
-		}
+	private void visualize(Player player, boolean autocleanup) {
+		cleanup(player);
+		Cleanup cleanup;
 
 		CreatureGroupSettings group = CreatureSettingsStorage.getGroupSettings(this.group);
 
@@ -101,44 +98,51 @@ public abstract class CountCommand extends BaseCommand {
 
 				int id = Settings.getInt(Setting.GRID_NONE_ID);
 				int color = Settings.getInt(Setting.GRID_NONE_DATA);
+				VisualizeLayout layout = VisualizeLayout.LAYOUT_NONE;
+				
 				if (max > 0) {
 					id = Settings.getInt(Setting.GRID_LOW_ID);
 					color = Settings.getInt(Setting.GRID_LOW_DATA);
+					layout = VisualizeLayout.LAYOUT_LOW;
 				}
 				if (max >= 0.8) {
 					id = Settings.getInt(Setting.GRID_MEDIUM_ID);
 					color = Settings.getInt(Setting.GRID_MEDIUM_DATA);
+					layout = VisualizeLayout.LAYOUT_MEDIUM;
 				}
 				if (max >= 0.9) {
 					id = Settings.getInt(Setting.GRID_HIGH_ID);
 					color = Settings.getInt(Setting.GRID_HIGH_DATA);
+					layout = VisualizeLayout.LAYOUT_HIGH;
 				}
 				if (max > 1) {
 					id = Settings.getInt(Setting.GRID_EXCEED_ID);
 					color = Settings.getInt(Setting.GRID_EXCEED_DATA);
+					layout = VisualizeLayout.LAYOUT_EXCEED;
 				}
 
-				if (full <= 0) {
-					Block block = chunk.getBlock(0, drawY, 0);
-					player.sendBlockChange(block.getLocation(), id, (byte) color);
-				} else {
-					for (int bx = 0; bx < 16; bx++) {
-						for (int bz = 0; bz < 16; bz++) {
-							Block block = chunk.getBlock(bx, drawY, bz);
-
-							if (bx == 0 || bx == 15 || bz == 0 || bz == 15) {
-								player.sendBlockChange(block.getLocation(), id, (byte) color);
-							}
-						}
-					}
-				}
+				layout.draw(chunk, player, drawY, id, (byte) color);
 			}
 		}
 
 		cleanup = new Cleanup(cx, cz, drawY, player.getWorld(), player);
-		cleanup.setTaskId(
-				Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, cleanup, Settings.getInt(Setting.GRID_DURATION)));
+		if (autocleanup) {
+			cleanup.setTaskId(
+					Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, cleanup, Settings.getInt(Setting.GRID_DURATION)));
+		}
 		cleanups.put(player, cleanup);
+	}
+
+	private void cleanup(Player player) {
+		Cleanup cleanup = cleanups.get(player);
+
+		if (cleanup != null) {
+			if (Bukkit.getScheduler().isQueued(cleanup.getTaskId())) {
+				Bukkit.getScheduler().cancelTask(cleanup.getTaskId());
+				cleanup.fired = true;
+				cleanup.run();
+			}
+		}
 	}
 
 	private void showCount(Player player) {
