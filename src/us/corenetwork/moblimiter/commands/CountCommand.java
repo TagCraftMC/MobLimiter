@@ -287,6 +287,9 @@ public abstract class CountCommand extends BaseCommand
 				{
 					for (int z = cz - 6; z < cz + 6; z++)
 					{
+						if (!world.isChunkLoaded(x, z))
+							continue;
+						
 						Chunk chunk = world.getChunkAt(x, z);
 						for (int bx = 0; bx < 16; bx++)
 						{
