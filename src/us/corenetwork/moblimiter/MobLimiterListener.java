@@ -1,5 +1,6 @@
 package us.corenetwork.moblimiter;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -31,13 +32,6 @@ public class MobLimiterListener implements Listener
 	@EventHandler(ignoreCancelled = true)
 	public void onCreatureSpawn(CreatureSpawnEvent event)
 	{
-		//Prevent horse breeding
-		if (Settings.getBoolean(Setting.NO_HORSE_BREED) && event.getEntityType() == EntityType.HORSE && event.getSpawnReason() == SpawnReason.BREEDING)
-		{
-			event.setCancelled(true);
-			return;
-		}
-
 		if (CreatureUtil.getViewDistanceLimitStatus(event.getEntityType(), event.getLocation().getChunk()) != LimitStatus.OK)
 		{
 			event.setCancelled(true);
@@ -73,7 +67,7 @@ public class MobLimiterListener implements Listener
 			return;
 
 		//No horse breed
-		if (Settings.getBoolean(Setting.NO_HORSE_BREED) && ent.getType() == EntityType.HORSE)
+		if (Settings.getBoolean(Setting.NO_HORSE_BREED) && ent.getType() == EntityType.HORSE && hand.getType() != Material.GOLDEN_APPLE)
 		{
 			Util.Message(Settings.getString(Setting.MESSAGE_NO_HORSE_BREEDING), player);
 			event.setCancelled(true);

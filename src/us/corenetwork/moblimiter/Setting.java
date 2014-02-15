@@ -16,7 +16,7 @@ public enum Setting
 	MESSAGE_TOO_MANY("Messages.TooManyMobs", "&cYou have too many mobs for the server to handle. Please, if you can, consider killing some or moving them further to keep the server healthy. Many thanks, we appreciate it."),
 	MESSAGE_BREED_LIMIT_ONE_MOB("Messages.BreedLimitOneMob", "You cannot breed this <MobName> because there is more than <MobTypeLimit> <MobNamePlural> in <Radius> block radius around you."),
 	MESSAGE_BREED_LIMIT_ALL_MOBS("Messages.BreedLimitAllMobs", "You cannot breed this <MobName> because there are too more than <MobGroupLimit> <MobGroupNamePlural> in <Radius> block radius around you."),
-	MESSAGE_NO_HORSE_BREEDING("Messages.NoHorseBreeding", "Sorry, you are not allowed to breed horses. Find another one in the wild."),
+	MESSAGE_NO_HORSE_BREEDING("Messages.NoHorseBreeding", "Sorry, you are only allowed to breed horses using golden apple."),
 
 
 	GRID_NONE_ID("Grid.None.Id", Material.GLASS.getId()),
