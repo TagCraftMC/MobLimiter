@@ -124,3 +124,9 @@ This will make the grid stay until you reload the chunks or type in this command
 
     /animals hide
 
+## Permissions
+
+```
+moblimiter.command.animals
+moblimiter.command.villagers
+```
