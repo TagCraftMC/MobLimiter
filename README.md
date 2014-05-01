@@ -8,8 +8,8 @@ Compile (a Maven project) or download from our [build service](http://build.core
 
 ## Configuration
 
-** Note on bukkit settings** it is recommended to set the ticks-per.monster-spawns value in the bukkit.yml to value of 10 or higher (im using 80)
-** Note on spawners ** To allow spawners to reach the full spawnerlimit AND allow normal viewdistance limits to also be reached at the same time, it is recommended to set the spawn-limits.monsters value to a value of more than both of them combined (i have spawner limit of 100, viewdistance limits of 40 monsters so i have mine set to monsters limit to 200.) This way spawner usage won't dry up normal spawn activity.
+* ** Note on bukkit settings** it is recommended to set the ticks-per.monster-spawns value in the bukkit.yml to value of 10 or higher (im using 80)
+* ** Note on spawners ** To allow spawners to reach the full spawnerlimit AND allow normal viewdistance limits to also be reached at the same time, it is recommended to set the spawn-limits.monsters value to a value of more than both of them combined (i have spawner limit of 100, viewdistance limits of 40 monsters so i have mine set to monsters limit to 200.) This way spawner usage won't dry up normal spawn activity.
 
 There are three levels of configuration
 global level, group level, and individual mob level, almost all options are optional at the individual mob level and they will inherit the setting from their group if unspecified.
