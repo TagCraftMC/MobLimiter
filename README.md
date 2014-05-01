@@ -1,103 +1,168 @@
-MobLimiter 2
+MobLimiter 3
 ============
 
 ## Download
 
 Compile (a Maven project) or download from our [build service](http://build.core-network.us:8080/job/MobLimiter%202/).
 
+
 ## Configuration
 
+There are three levels of configuration
+global level, group level, and individual mob level, almost all options are optional at the individual mob level and they will inherit the setting from their group if unspecified.
+
+Keyword descriptions:
+ * Name: You can specify a name to give a plural form version of any group or mob. If not given, groups default to the group name, mobs without a name will not be listed in counting commands.
+ * ChuckLimit: The number of mobs allowed to spawn in a chunk. (group and individual entity level)
+ * ViewDistanceLimit: The number of mobs allowed to spawn in a the full view distance. (group and individual entity level)
+ * WarnOverLimit: Wether or not the TooManyMobs should be shown for the group (group level only)
+ * SpawnerLimit: A seperate limit for spawner mobs. This can allow spawner mobs to go beyond the normal limits. (individual entity level only)
+ * SpawnDistanceMax: A maximum distance away from a player that a mob is allowed to spawn. (group and individual entity level)
+ * SpawnDistanceMin: A minimum distance from a player a mob is allowed to spawn. (group and individual entity level)
+ * SpawnHeightMax: A maximum height difference from a player a mob is allowed to spawn. (group and individual entity level)
+ * ViewDistanceChunks: The radius of chunks around a player that is used as the view distance (should probably be set to match your server.properties)
+ * EnabledWorlds: A list of worlds that are limited by this mod
+ * Debug: Print debug information
+ * NoHorseBreed: Disable all horse breeding
+ * NoPigmenPortal: Disable pigmen from coming out of portals (works on all worlds)
+ * BreedingSpamDelaySeconds: a delay on the error message given to players when they try to breed animals while over a limit.
+
+## Recommended/Example Config
+
+It is recommended to copy this base config over to your config.yml (as much of it won't be auto populated)
+
 ``` yaml
-Animals:
-  GlobalChunkLimit: 30
-  GlobalViewDistanceLimit: 150
-  GroupPlural: Animals
-  HORSE:
-    NameSingular: Horse
-    NamePlural: Horses
-    ChunkLimit: 8
-    ViewDistanceLimit: 150
-  COW:
-    NameSingular: Cow
-    NamePlural: Cows
-    ChunkLimit: 30
-    ViewDistanceLimit: 150
-  SHEEP:
-    NameSingular: Sheep
-    NamePlural: Sheep
-    ChunkLimit: 30
-    ViewDistanceLimit: 150
-  CHICKEN:
-    NameSingular: Chicken
-    NamePlural: Chickens
-    ChunkLimit: 30
-    ViewDistanceLimit: 150
-  PIG:
-    NameSingular: Pig
-    NamePlural: Pigs
-    ChunkLimit: 30
-    ViewDistanceLimit: 150
-Villages:
-  GroupPlural: Villagers and Golems
-  GlobalChunkLimit: 20
-  GlobalViewDistanceLimit: 150
-  IRON_GOLEM:
-    NameSingular: Iron Golem
-    NamePlural: Iron Golems
-    ChunkLimit: 4
-    ViewDistanceLimit: 150
-  VILLAGER:
-    NameSingular: Villager
-    NamePlural: Villagers
-    ChunkLimit: 20
-    ViewDistanceLimit: 150
-ViewDistanceChunks: 6
+Groups:
+  Animals:
+    ChunkLimit: 40
+    ViewDistanceLimit: 200
+    WarnOverLimit: true
+    HORSE:
+      Name: Horses
+    COW:
+      Name: Cows
+    SHEEP:
+      Name: Sheep
+    CHICKEN:
+      Name: Chickens
+    PIG:
+      Name: Pigs
+    WOLF:
+      Name: Wolves
+    OCELOT:
+      Name: Cats
+  Villagers:
+    Name: Villagers and Golems
+    ChunkLimit: 40
+    ViewDistanceLimit: 120
+    WarnOverLimit: true
+    IRON_GOLEM:
+      Name: Golems
+      ChunkLimit: 4
+      ViewDistanceLimit: 40
+    VILLAGER:
+      Name: Villagers
+      ViewDistanceLimit: 80
+    SNOWMAN:
+      Name: Snowmen
+      ChunkLimit: 4
+      ViewDistanceLimit: 40
+  Monsters:
+    ChunkLimit: 10
+    ViewDistanceLimit: 40
+    SpawnDistanceMax: 80
+    SpawnHeightMax: 30
+    BLAZE:
+      Name: Blazes
+      SpawnerLimit: 100
+      SpawnDistanceMin: 5
+    CAVE_SPIDER:
+      Name: Spiders
+      SpawnerLimit: 100
+    CREEPER:
+      Name: Creepers
+    ENDERMAN:
+      Name: Endermen
+      ChunkLimit: 100
+    PIG_ZOMBIE:
+      Name: Pigmen
+    SKELETON:
+      Name: Skeletons
+      SpawnerLimit: 100
+    SLIME:
+      Name: Slimes
+    SPIDER:
+      Name: Spiders
+    ZOMBIE:
+      Name: Zombies
+      SpawnerLimit: 50
+    WITCH:
+      Name: Witches
+    GHAST:
+      Name: Ghasts
+      SpawnHeightMax: 50
+      ViewDistanceLimit: 6
+    MAGMA_CUBE:
+      Name: Magma Cubes
+      ViewDistanceLimit: 10
+    SILVERFISH:
+      ViewDistanceLimit: 10
+  Neutrals:
+    ChunkLimit: 1
+    ViewDistanceLimit: 10
+    SQUID:
+      Name: Squid
+    BAT:
+      Name: Bats
+ViewDistanceChunks: 8
+EnabledWorlds:
+- world
+- world_nether
+Debug: false
 Messages:
   NoPermission: '&cNo permission!'
   MobCountLine: '&6<MobName>: <ChunkCount>&7/<ChunkLimit> in chunk, &6<ViewDistanceCount>&7/<ViewDistanceLimit>
     in view distance.'
-  TooManyMobs: '&cYou have too many mobs for the server to handle. Please, if you
-    can, consider killing some or moving them further to keep the server healthy.
-    Many thanks, we appreciate it.'
-  BreedLimitOneMob: '&cYou cannot breed more than <MobTypeLimit> <MobNamePlural> in
-    view distance.'
-  BreedLimitAllMobs: '&cYou cannot breed more than <MobGroupLimit> <MobGroupNamePlural>
-    in view distance.'
+  TooManyMobs: '&cPlease consider killing some or moving nearby mobs to keep the server
+    healthy.'
+  BreedLimitReached: '&cYou cannot breed more than <MobLimit> <MobName> in view distance.'
   NoHorseBreeding: '&cSorry, you are not allowed to breed horses. Find another one
     in the wild.'
-NoHorseBreed: true
+NoHorseBreed: false
+NoPigmenPortal: true
 BreedingSpamDelaySeconds: 5
-Grid: # contains settings for the grid
-  None: # block id/data for 0% of limit
+Grid:
+  None:
     Id: 20
     Data: 0
-  Low: # block id/data for < 80% of limit
+  Low:
     Id: 35
     Data: 5
-  Medium: # block id/data for > 80% of limit
+  Medium:
     Id: 35
     Data: 4
-  High: # block id/data for > 90% of limit
+  High:
     Id: 35
     Data: 1
-  Exceed: # block id/data for when the limit is exceeded
+  Exceed:
     Id: 35
     Data: 14
-  Duration: 600 # the duration after which the grid will disappear automatically, in server ticks.
+  Duration: 600
 ```
 
 ## Commands
 
-There are 2 commands, which do the same thing but for different creature groups:
+There is a command and permission node for each group you define, you can change the config to group your mobs however you want, in my example config above the commands are:
 
-    /animals
-    /villagers
+```
+/animals
+/villagers
+/monsters
+```
 
-The `/animals` command will count the animals group, that is cows, pigs, chicken, sheep and horses.
+Each command counts the mobs you define as being in that group in your config
 
-The `/villagers` command will count villagers and iron golems.
-
-Both commands have the same arguments, the `/animals` command will be used as an example here,
+All commands have the same arguments, the `/animals` command will be used as an example here,
 but every argument will work the same way for the `villagers` command as well.
 
     /animals show
@@ -126,7 +191,10 @@ This will make the grid stay until you reload the chunks or type in this command
 
 ## Permissions
 
+There is a permission node for each group you define just like with the commands. In the example config the nodes are:
+
 ```
 moblimiter.command.animals
 moblimiter.command.villagers
+moblimiter.command.monsters
 ```

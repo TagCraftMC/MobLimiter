@@ -1,6 +1,8 @@
 package us.corenetwork.moblimiter;
 
 
+import java.awt.List;
+
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 
@@ -8,15 +10,18 @@ public enum Setting
 {
 
 	VIEW_DISTANCE_CHUNKS("ViewDistanceChunks", 10),
-	NO_HORSE_BREED("NoHorseBreed", true),
+	NO_HORSE_BREED("NoHorseBreed", false),
+	DEBUG_LOGGING("Debug", false),
+	NO_PIGMEN_PORTAL("NoPigmenPortal", false),
 	BREEDING_SPAM_DELAY_SECONDS("BreedingSpamDelaySeconds", 5),
+	
+	ENABLED_WORLDS("EnabledWorlds", null),
 
-	MESSAGE_NO_PERMISSION("Messages.NoPermission", "No permission!"),
-	MESSAGE_MOB_COUNT_LINE("Messages.MobCountLine", "<MobName>: <ChunkCount>&f/<ChunkLimit> in Chunk, <ViewDistanceCount>&f/<ViewDistanceLimit> in View distance"),
-	MESSAGE_TOO_MANY("Messages.TooManyMobs", "&cYou have too many mobs for the server to handle. Please, if you can, consider killing some or moving them further to keep the server healthy. Many thanks, we appreciate it."),
-	MESSAGE_BREED_LIMIT_ONE_MOB("Messages.BreedLimitOneMob", "You cannot breed this <MobName> because there is more than <MobTypeLimit> <MobNamePlural> in <Radius> block radius around you."),
-	MESSAGE_BREED_LIMIT_ALL_MOBS("Messages.BreedLimitAllMobs", "You cannot breed this <MobName> because there are too more than <MobGroupLimit> <MobGroupNamePlural> in <Radius> block radius around you."),
-	MESSAGE_NO_HORSE_BREEDING("Messages.NoHorseBreeding", "Sorry, you are only allowed to breed horses using golden apple."),
+	MESSAGE_NO_PERMISSION("Messages.NoPermission", "&cNo permission!"),
+	MESSAGE_MOB_COUNT_LINE("Messages.MobCountLine", "&6<MobName>: <ChunkCount>&7/<ChunkLimit> in chunk, &6<ViewDistanceCount>&7/<ViewDistanceLimit> in view distance."),
+	MESSAGE_TOO_MANY("Messages.TooManyMobs", "&cPlease consider killing some or moving nearby mobs to keep the server healthy."),
+	MESSAGE_BREED_LIMIT_REACHED("Messages.BreedLimitReached", "&cYou cannot breed more than <MobLimit> <MobName> in view distance."),
+	MESSAGE_NO_HORSE_BREEDING("Messages.NoHorseBreeding", "&cSorry, you are not allowed to breed horses. Find another one in the wild."),
 
 
 	GRID_NONE_ID("Grid.None.Id", Material.GLASS.getId()),

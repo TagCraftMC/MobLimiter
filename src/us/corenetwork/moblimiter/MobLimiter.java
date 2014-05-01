@@ -3,13 +3,14 @@ package us.corenetwork.moblimiter;
 import org.bukkit.Chunk;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import us.corenetwork.moblimiter.commands.AnimalsCommand;
+import us.corenetwork.moblimiter.commands.CountCommand;
 import us.corenetwork.moblimiter.commands.BaseCommand;
-import us.corenetwork.moblimiter.commands.VillagersCommand;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class MobLimiter extends JavaPlugin implements Listener
 {
@@ -27,12 +28,14 @@ public class MobLimiter extends JavaPlugin implements Listener
 
 		IO.LoadSettings();
 
-		CreatureSettingsStorage.init();
+		CreatureGroupSettings.init();
 
 		this.getServer().getPluginManager().registerEvents(new MobLimiterListener(), this);
 
-		commands.put("animals", new AnimalsCommand());
-		commands.put("villagers", new VillagersCommand());
+		for (Map.Entry<String, CreatureGroupSettings> g : CreatureGroupSettings.getGroups())
+		{
+			commands.put(g.getKey().toLowerCase(), new CountCommand(g.getKey()));
+		}
 
 		pool.start();
 	}

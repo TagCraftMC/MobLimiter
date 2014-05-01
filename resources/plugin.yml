@@ -1,9 +1,12 @@
 name: MobLimiter
 main: us.corenetwork.moblimiter.MobLimiter
-version: 2.0
-author: matejdro
+version: 3.0
+author: matejdro and others
 commands:
     animals:
         description: Nearby animals.
     villagers:
         description: Nearby villagers.
+    monsters:
+        description: Nearby monsters.
+
