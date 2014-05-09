@@ -47,6 +47,7 @@ Groups:
       SpawnerLimit: 100
     CREEPER:
       Name: Creepers
+      SpawnDistanceMin: 5
     ENDERMAN:
       Name: Endermen
       ChunkLimit: 100
