@@ -98,7 +98,7 @@ public class MobLimiterListener implements Listener
 			return;
 
 		//No horse breed
-		if (Settings.getBoolean(Setting.NO_HORSE_BREED) && ent.getType() == EntityType.HORSE)
+		if (Settings.getBoolean(Setting.NO_HORSE_BREED) && ent.getType() == EntityType.HORSE && hand.getType() != Material.GOLDEN_APPLE)
 		{
 			Util.Message(Settings.getString(Setting.MESSAGE_NO_HORSE_BREEDING), player);
 			event.setCancelled(true);

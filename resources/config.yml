@@ -92,7 +92,7 @@ Messages:
   TooManyMobs: '&cPlease consider killing some or moving nearby mobs to keep the server
     healthy.'
   BreedLimitReached: '&cYou cannot breed more than <MobLimit> <MobName> in view distance.'
-  NoHorseBreeding: '&cSorry, you are not allowed to breed horses. Find another one
+  NoHorseBreeding: '&cSorry, horses are not interested in golden carrots, only golden apples.
     in the wild.'
 NoHorseBreed: false
 NoPigmenPortal: true
