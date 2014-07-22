@@ -1,0 +1,117 @@
+Groups:
+  Animals:
+    ChunkLimit: 40
+    ViewDistanceLimit: 200
+    WarnOverLimit: true
+    HORSE:
+      Name: Horses
+    COW:
+      Name: Cows
+    SHEEP:
+      Name: Sheep
+    CHICKEN:
+      Name: Chickens
+    PIG:
+      Name: Pigs
+    WOLF:
+      Name: Wolves
+    OCELOT:
+      Name: Cats
+  Villagers:
+    Name: Villagers and Golems
+    ChunkLimit: 40
+    ViewDistanceLimit: 120
+    WarnOverLimit: true
+    IRON_GOLEM:
+      Name: Golems
+      ChunkLimit: 4
+      ViewDistanceLimit: 40
+    VILLAGER:
+      Name: Villagers
+      ViewDistanceLimit: 80
+    SNOWMAN:
+      Name: Snowmen
+      ChunkLimit: 4
+      ViewDistanceLimit: 40
+  Monsters:
+    ChunkLimit: 10
+    ViewDistanceLimit: 40
+    SpawnDistanceMax: 80
+    SpawnHeightMax: 30
+    BLAZE:
+      Name: Blazes
+      SpawnerLimit: 100
+      SpawnDistanceMin: 5
+    CAVE_SPIDER:
+      Name: Spiders
+      SpawnerLimit: 100
+    CREEPER:
+      Name: Creepers
+      SpawnDistanceMin: 5
+    ENDERMAN:
+      Name: Endermen
+      ChunkLimit: 100
+    PIG_ZOMBIE:
+      Name: Pigmen
+    SKELETON:
+      Name: Skeletons
+      SpawnerLimit: 100
+    SLIME:
+      Name: Slimes
+    SPIDER:
+      Name: Spiders
+    ZOMBIE:
+      Name: Zombies
+      SpawnerLimit: 50
+    WITCH:
+      Name: Witches
+    GHAST:
+      Name: Ghasts
+      SpawnHeightMax: 50
+      ViewDistanceLimit: 6
+    MAGMA_CUBE:
+      Name: Magma Cubes
+      ViewDistanceLimit: 10
+    SILVERFISH:
+      ViewDistanceLimit: 10
+  Neutrals:
+    ChunkLimit: 1
+    ViewDistanceLimit: 10
+    SQUID:
+      Name: Squid
+    BAT:
+      Name: Bats
+ViewDistanceChunks: 8
+EnabledWorlds:
+- world
+- world_nether
+Debug: false
+Messages:
+  NoPermission: '&cNo permission!'
+  MobCountLine: '&6<MobName>: <ChunkCount>&7/<ChunkLimit> in chunk, &6<ViewDistanceCount>&7/<ViewDistanceLimit>
+    in view distance.'
+  TooManyMobs: '&cPlease consider killing some or moving nearby mobs to keep the server
+    healthy.'
+  BreedLimitReached: '&cYou cannot breed more than <MobLimit> <MobName> in view distance.'
+  NoHorseBreeding: '&cSorry, horses are not interested in golden carrots, only golden apples.
+    in the wild.'
+NoHorseBreed: false
+NoPigmenPortal: true
+BreedingSpamDelaySeconds: 5
+Grid:
+  None:
+    Id: 20
+    Data: 0
+  Low:
+    Id: 35
+    Data: 5
+  Medium:
+    Id: 35
+    Data: 4
+  High:
+    Id: 35
+    Data: 1
+  Exceed:
+    Id: 35
+    Data: 14
+  Duration: 600

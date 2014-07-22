@@ -4,6 +4,13 @@ import org.bukkit.Bukkit;
 
 public class MLLog
 {
+	static boolean debug = Settings.getBoolean(Setting.DEBUG_LOGGING);
+	public static void debug(String text)
+	{
+		if(debug)
+			info(text);
+	}
+
 	public static void info(String text)
 	{
 		Bukkit.getLogger().info("[MobLimiter] " + text);
