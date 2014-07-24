@@ -12,7 +12,7 @@ import us.corenetwork.moblimiter.commands.BaseCommand;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MobLimiter extends JavaPlugin implements Listener
+public class MobLimiter extends JavaPlugin
 {
 
 	public static MobLimiter instance;
@@ -29,9 +29,8 @@ public class MobLimiter extends JavaPlugin implements Listener
 		IO.LoadSettings();
 
 		CreatureGroupSettings.init();
-
-		this.getServer().getPluginManager().registerEvents(new MobLimiterListener(), this);
-
+		OldMobKiller.init();
+		
 		for (Map.Entry<String, CreatureGroupSettings> g : CreatureGroupSettings.getGroups())
 		{
 			commands.put(g.getKey().toLowerCase(), new CountCommand(g.getKey()));

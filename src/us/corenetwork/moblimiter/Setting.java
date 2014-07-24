@@ -2,6 +2,7 @@ package us.corenetwork.moblimiter;
 
 
 import java.awt.List;
+import java.util.Arrays;
 
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
@@ -14,6 +15,12 @@ public enum Setting
 	DEBUG_LOGGING("Debug", false),
 	NO_PIGMEN_PORTAL("NoPigmenPortal", false),
 	BREEDING_SPAM_DELAY_SECONDS("BreedingSpamDelaySeconds", 5),
+	
+	OLD_MOB_KILLER_INTERVAL("OldMobKiller.IntervalTicks", 6000),
+	OLD_MOB_KILLER_TRESHOLD("OldMobKiller.KillingAgeTicks", 10000),
+	OLD_MOB_KILLER_AFFECTED_MOBS("OldMobKiller.AffectedMobs", Arrays.asList(new String[] { "Zombie", "Skeleton", "Creeper", "Spider" })),
+	OLD_MOB_KILLER_NEAR_MOBS_SEARCH_RANGE("OldMobKiller.NearMobSearchRangeBlocks", 4),
+	OLD_MOB_KILLER_NEAR_MOBS_COUNT("OldMobKiller.NearMobKillCount", 4),
 	
 	ENABLED_WORLDS("EnabledWorlds", null),
 
