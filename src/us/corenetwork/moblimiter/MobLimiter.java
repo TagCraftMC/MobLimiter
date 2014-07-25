@@ -11,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import us.corenetwork.moblimiter.commands.BaseCommand;
 import us.corenetwork.moblimiter.commands.CountCommand;
 import us.corenetwork.moblimiter.commands.HelpCommand;
+import us.corenetwork.moblimiter.commands.ReloadCommand;
 
 public class MobLimiter extends JavaPlugin
 {
@@ -32,7 +33,8 @@ public class MobLimiter extends JavaPlugin
 		OldMobKiller.init();
 		
 		commands.put("help", new HelpCommand());
-		
+		commands.put("reload", new ReloadCommand());
+
 		for (Map.Entry<String, CreatureGroupSettings> g : CreatureGroupSettings.getGroups())
 		{
 			commands.put(g.getKey().toLowerCase(), new CountCommand(g.getKey()));
