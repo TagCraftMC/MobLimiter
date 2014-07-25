@@ -25,6 +25,7 @@ public class CountCommand extends BaseCommand
 		needPlayer = true;
 		this.group = group;
 		permission = group.toLowerCase();
+		desc = "Count " + group;
 	}
 
 	@Override

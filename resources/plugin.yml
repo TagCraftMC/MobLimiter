@@ -3,10 +3,6 @@ main: us.corenetwork.moblimiter.MobLimiter
 version: 3.0
 author: matejdro and others
 commands:
-    animals:
-        description: Nearby animals.
-    villagers:
-        description: Nearby villagers.
-    monsters:
-        description: Nearby monsters.
+    ml:
+        description: Base moblimiter command.
 
