@@ -72,7 +72,8 @@ public class CreatureUtil
 				Integer groupCount = perGroupCounts.get(creatureSettings.getGroup());
 				if(groupCount == null) groupCount = 0;
 
-				if (groupCount >= creatureSettings.getGroup().getChunkLimit() || creatureCount >= creatureSettings.getChunkLimit())
+				if ( (creatureSettings.getGroup().getChunkLimit() >= 0 && groupCount >= creatureSettings.getGroup().getChunkLimit()) ||
+					  creatureCount >= creatureSettings.getChunkLimit())
 				{
 					e.remove();
 					count++;
@@ -185,11 +186,14 @@ public class CreatureUtil
 			// ignore spawner mobs on other kinds of spawn counting
 			else if (creatureSettings.IsSameGroup(c.getType()) && !c.hasMetadata("ML-Spawner"))
 			{
-				allCountViewDistance++;
-				if (allCountViewDistance >= groupSettings.getViewDistanceLimit())
+				if (groupSettings.getViewDistanceLimit() >= 0)
 				{
-					MLLog.debug("Cancelling " + reason + " Spawn of " + type + " because of too many in group");
-					return LimitStatus.TOO_MANY_ALL;
+					allCountViewDistance++;
+					if (allCountViewDistance >= groupSettings.getViewDistanceLimit())
+					{
+						MLLog.debug("Cancelling " + reason + " Spawn of " + type + " because of too many in group");
+						return LimitStatus.TOO_MANY_ALL;
+					}
 				}
 
 				if (c.getType() == type)

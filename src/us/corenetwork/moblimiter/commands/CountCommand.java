@@ -102,7 +102,11 @@ public class CountCommand extends BaseCommand
 					}
 				}
 
-				float full = (float) sum / group.getChunkLimit();
+				float full;
+				if (group.getChunkLimit() < 0)
+					full = 0;
+				else
+					full = (float) sum / group.getChunkLimit();
 
 				if (full > max)
 				{
@@ -205,7 +209,7 @@ public class CountCommand extends BaseCommand
 				
 				if (!tooMany)
 				{
-					tooMany = curCount > creatureSettings.getChunkLimit() || allCountChunk > groupSettings.getChunkLimit();
+					tooMany = curCount > creatureSettings.getChunkLimit() || (groupSettings.getChunkLimit() > 0 && allCountChunk > groupSettings.getChunkLimit());
 				}
 			}
 		}
