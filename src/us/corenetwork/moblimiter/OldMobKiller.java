@@ -8,7 +8,9 @@ import org.bukkit.World;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.EntityEquipment;
 
 public class OldMobKiller implements Listener {
 	private static HashSet<String> affectedMobs = new HashSet<String>();
@@ -50,6 +52,13 @@ public class OldMobKiller implements Listener {
 		return count;
 	}
 	
+	private static boolean hasStolenArmor(LivingEntity mob)
+	{
+		EntityEquipment equipment = mob.getEquipment();
+		return equipment.getBootsDropChance() >= 1 || equipment.getChestplateDropChance() >= 1 || equipment.getHelmetDropChance() >= 1 || 
+			   equipment.getItemInHandDropChance() >= 1 || equipment.getLeggingsDropChance() >= 1;
+	}
+	
 	private static class MobKillerTimer implements Runnable
 	{
 		@Override
@@ -70,7 +79,7 @@ public class OldMobKiller implements Listener {
 					if (age > killTreshold)
 					{
 						Creature creature = (Creature) mob;
-						if (creature.getTarget() == null || getNumberOfNearbyMobs(mob) >= nearMobsCount)
+						if (creature.getTarget() == null || (!hasStolenArmor(creature) && getNumberOfNearbyMobs(mob) >= nearMobsCount))
 						{
 							mob.remove();
 						}
