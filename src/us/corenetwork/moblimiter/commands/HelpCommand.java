@@ -29,7 +29,7 @@ public class HelpCommand extends BaseCommand {
 
 		for (Entry<String, BaseCommand> e : MobLimiter.commands.entrySet())
 		{
-			komandes.add(Settings.getCommandDescription(e.getKey(), "core", e.getValue().desc));
+			komandes.add(Settings.getCommandDescription(e.getKey(), "ml", e.getValue().desc));
 		}  		
 		String[] komande = komandes.toArray(new String[0]);
 		Arrays.sort(komande);
