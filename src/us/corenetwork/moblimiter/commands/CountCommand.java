@@ -248,10 +248,6 @@ public class CountCommand extends BaseCommand
 
 	private void messageCount(Player player, String creature, int chunkCount, int chunkMax, int vdCount, int vdMax)
 	{
-		if(vdCount == 0) {
-			return;
-		}
-		
 		char chunkColor = Util.getPercentageColor((double) chunkCount / chunkMax);
 		char vdColor = Util.getPercentageColor((double) vdCount / vdMax);
 
