@@ -227,7 +227,7 @@ public class CountCommand extends BaseCommand
 
 			if (!tooMany)
 			{
-				tooMany = curCount > creatureSettings.getViewDistanceLimit() || allCountViewDistance > groupSettings.getViewDistanceLimit();
+				tooMany = (creatureSettings.getViewDistanceLimit() >= 0 && curCount > creatureSettings.getViewDistanceLimit()) || (groupSettings.getViewDistanceLimit() > 0 && allCountChunk > groupSettings.getViewDistanceLimit());
 			}
 		}
 
