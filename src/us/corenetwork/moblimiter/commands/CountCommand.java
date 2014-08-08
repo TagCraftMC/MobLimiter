@@ -209,7 +209,7 @@ public class CountCommand extends BaseCommand
 				
 				if (!tooMany)
 				{
-					tooMany = curCount > creatureSettings.getChunkLimit() || (groupSettings.getChunkLimit() > 0 && allCountChunk > groupSettings.getChunkLimit());
+					tooMany = (creatureSettings.getChunkLimit() >= 0 && curCount > creatureSettings.getChunkLimit()) || (groupSettings.getChunkLimit() > 0 && allCountChunk > groupSettings.getChunkLimit());
 				}
 			}
 		}
@@ -248,10 +248,20 @@ public class CountCommand extends BaseCommand
 
 	private void messageCount(Player player, String creature, int chunkCount, int chunkMax, int vdCount, int vdMax)
 	{
+		if(vdMax < 0 && chunkMax < 0) {
+			return;
+		}
+		
 		char chunkColor = Util.getPercentageColor((double) chunkCount / chunkMax);
 		char vdColor = Util.getPercentageColor((double) vdCount / vdMax);
 
-		String message = Settings.getString(Setting.MESSAGE_MOB_COUNT_LINE);
+		String message;
+		if (vdMax < 0)
+			message = Settings.getString(Setting.MESSAGE_MOB_COUNT_LINE_ONLY_CHUNK);
+		else if (vdCount < 0)
+			message = Settings.getString(Setting.MESSAGE_MOB_COUNT_LINE_ONLY_VD);
+		else
+			message = Settings.getString(Setting.MESSAGE_MOB_COUNT_LINE);
 
 		message = message.replace("<MobName>", creature);
 		message = message.replace("<ChunkCount>", "&" + chunkColor + chunkCount);
