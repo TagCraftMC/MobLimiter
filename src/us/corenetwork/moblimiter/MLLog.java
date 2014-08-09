@@ -4,10 +4,9 @@ import org.bukkit.Bukkit;
 
 public class MLLog
 {
-	static boolean debug = Settings.getBoolean(Setting.DEBUG_LOGGING);
 	public static void debug(String text)
 	{
-		if(debug)
+		if(Settings.getBoolean(Setting.DEBUG_LOGGING))
 			info(text);
 	}
 
