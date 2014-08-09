@@ -33,6 +33,10 @@ public class CountCommand extends BaseCommand
 	{
 		Player player = (Player) sender;
 
+		World world = player.getWorld();
+		if (!Settings.getList(Setting.ENABLED_WORLDS).contains(world.getName()))
+			return;
+		
 		boolean visualize = args.length > 0 && args[0].equals("show");
 		boolean keep = args.length > 1 && args[1].equals("keep");
 		boolean clear = args.length > 0 && args[0].equals("hide");

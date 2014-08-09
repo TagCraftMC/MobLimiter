@@ -9,6 +9,7 @@ import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.EntityEquipment;
 
@@ -59,6 +60,11 @@ public class OldMobKiller implements Listener {
 			   equipment.getItemInHandDropChance() >= 1 || equipment.getLeggingsDropChance() >= 1;
 	}
 	
+	private static boolean hasPlayerTarget(Creature mob)
+	{
+		return mob.getTarget() != null && mob.getTarget() instanceof Player;
+	}
+	
 	private static class MobKillerTimer implements Runnable
 	{
 		@Override
@@ -69,17 +75,18 @@ public class OldMobKiller implements Listener {
 				{
 					if (!(mob instanceof Creature))
 						continue;
-										
+									
+					Creature creature = (Creature) mob;
+					
 					EntityType type = mob.getType();
-					if (type.getName() == null || !affectedMobs.contains(type.getName().toLowerCase()))
+					if (!hasPlayerTarget(creature) || !affectedMobs.contains(type.getName().toLowerCase()))
 						continue;
 										
 					int age = mob.getTicksLived();
 														
 					if (age > killTreshold)
 					{
-						Creature creature = (Creature) mob;
-						if (creature.getTarget() == null || (!hasStolenArmor(creature) && getNumberOfNearbyMobs(mob) >= nearMobsCount))
+						if (!hasPlayerTarget(creature) || (!hasStolenArmor(creature) && getNumberOfNearbyMobs(mob) >= nearMobsCount))
 						{
 							mob.remove();
 						}
