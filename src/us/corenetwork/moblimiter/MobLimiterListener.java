@@ -21,9 +21,14 @@ import java.util.List;
 public class MobLimiterListener implements Listener
 {
 
-	public static HashMap<String, Long> lastDisplayedBreedingSpam = new HashMap<String, Long>();
-	private static List<String> worlds = (List<String>) Settings.getList(Setting.ENABLED_WORLDS); 
+	public HashMap<String, Long> lastDisplayedBreedingSpam = new HashMap<String, Long>();
+	private List<String> worlds; 
 
+	public MobLimiterListener()
+	{
+		worlds = (List<String>) Settings.getList(Setting.ENABLED_WORLDS);
+	}
+	
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onChunkUnload(ChunkUnloadEvent event)
 	{

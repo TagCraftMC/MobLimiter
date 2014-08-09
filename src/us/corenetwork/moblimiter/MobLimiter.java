@@ -32,6 +32,8 @@ public class MobLimiter extends JavaPlugin
 		CreatureGroupSettings.init();
 		OldMobKiller.init();
 		
+		this.getServer().getPluginManager().registerEvents(new MobLimiterListener(), this);
+		
 		commands.put("help", new HelpCommand());
 		commands.put("reload", new ReloadCommand());
 
