@@ -75,7 +75,7 @@ public class MobLimiterListener implements Listener
 	@EventHandler(ignoreCancelled = true)
 	public void onEntityPortal(EntityPortalEvent event)
 	{
-		if (worlds.contains(event.getTo().getWorld().getName()) && CreatureUtil.getViewDistanceLimitStatus(event.getEntityType(), event.getTo().getChunk(), null) != LimitStatus.OK)
+		if (event.getTo() != null && worlds.contains(event.getTo().getWorld().getName()) && CreatureUtil.getViewDistanceLimitStatus(event.getEntityType(), event.getTo().getChunk(), null) != LimitStatus.OK)
 		{
 			event.setCancelled(true);
 			return;
