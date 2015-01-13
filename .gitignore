@@ -1,2 +1,17 @@
-target
-/bin
+*.class
+
+# Package Files #
+*.war
+*.ear
+
+# idea project files
+.idea/
+*.iml
+*.eml
+out/
+/target
+.classpath
+.project
+.settings/
+
+bin/
