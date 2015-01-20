@@ -4,3 +4,11 @@ jdk:
   - oraclejdk7
   - openjdk7
   - openjdk6
+deploy:
+  provider: releases
+  api-key: "a49cec4a3f6841199c23de4546ed0d999688de47"
+  file: "MobLimiter.jar"
+  skip_cleanup: true
+  on:
+    tags: true
+    all_branches: true
